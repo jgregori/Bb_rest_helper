@@ -33,7 +33,7 @@
     ```
 5. Example GET call:
 
-5.1. Create variables for the API endpoint url and the request parameters 
+* Create variables for the API endpoint url and the request parameters 
     ```
     GET_courses_endpoint="/learn/api/public/v3/courses"
     params={
@@ -41,11 +41,11 @@
         'fields':'courseId,name,description,ultraStatus'
           }
      ```   
-5.2. Call the learn_GET method, pasing the endpoint, token and parameters
+* Call the learn_GET method, pasing the endpoint, token and parameters
     ```
     GET_course=helper.learn_GET(GET_courses_endpoint,token,params)
     ```
-5.3. Use the pretty_printer method to print the call results to the console
+* Use the pretty_printer method to print the call results to the console
     ```
     helper.pretty_printer(GET_course)
     ```
