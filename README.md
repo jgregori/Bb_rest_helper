@@ -3,7 +3,7 @@
 
 # DESCRIPTION
 
-The Bb Rest Helper includes 4 classes to simply common API operations.
+The Bb Rest Helper includes 4 classes to simpilfy common API operations.
 
 1. Get_config. This class is used to get configuration variables (url,key,secret)from an external configuration file in Json format. If you are authenticating for more than one API (i.e. Learn and Collaborate) you will need separate configuration files (i.e. learn_config.json and collab_config.json).
 2. Auth_Helper. This class is used to get the token that then will be used in the API calls. Provides different functions for the different APIs.
