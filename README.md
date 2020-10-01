@@ -1,4 +1,4 @@
-# Bb_rest_helper
+# Bb_rest_helper (BETA)
 ## A Python 3 library to simplify working with Blackboard APIs
 
 # DESCRIPTION
