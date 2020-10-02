@@ -116,3 +116,25 @@ Pip3 install requirements.txt
     # Uuse the pretty printer method to print results to the console
     helper.pretty_printer(GET_course)
     ```
+5. Differences with a **POST, PUT, PATCH** requests.
+
+    the only difference is that these requests need an additional JSON payload, as per the API definition, to be able to create and/or update records, also the       right method needs to be selected from the Bb_request class (i.e. Bb_POST for a post request)
+     ```
+        #example of a json payload to create courses in Learn
+        payload={
+        "externalId": "Javier_API_003",
+        "courseId": "Javier_API_003",
+        "name": "Learn helper test",
+        "description": "A learn helper test to check if the class works as expectted",
+        "organization": False,
+        "ultraStatus": "Ultra",
+        "availability": {
+            "available": "Yes",
+            "duration": {
+            "type": "Continuous",
+                },
+            },
+        }
+        ```
+    
+    
