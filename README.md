@@ -42,7 +42,7 @@ Pip3 install requirements.txt
     key=config.get_key()
     secret=config.get_secret()
     ```
-    if using more than one API, you will need to use separate configuration files
+    * if using more than one API, you will need to use separate configuration files
     ```
     #Get Collab credentials
     collab_config=Get_Config('./collab_config.json')
@@ -58,11 +58,11 @@ Pip3 install requirements.txt
     learn_key=learn_config.get_key()
     learn_secret=learn_config.get_secret()
     ```
-    configure the logging, otherwise the application will run, but will not provide any info
+    * configure the logging, otherwise the application will run, but will not provide any info
     ```
     config.set_logging()
     ````
-    default logging level is DEBUG, but this can be changed by passing the Debug level value to the set_logging method
+    * default logging level is DEBUG, but this can be changed by passing the Debug level value to the set_logging method
     ```
     config.set_logging('logging.WARNING')
     ```
@@ -93,6 +93,10 @@ Pip3 install requirements.txt
         "limit":"10"
     }
      ```   
+* if you do not wish to use params, pass an empty dictionary:
+    ````
+    params={}
+    ```
 * Create an instance of Bb_requests, then call the Bb_GET method pasing the endpoint, token and parameters as arguments.
     ```
     #Create an instance of the Bb_requests class
