@@ -49,7 +49,8 @@ The Bb Rest Helper includes 4 classes to simpilfy common API operations.
     collab_secret=collab_config.get_secret()
     
     #Get Learn credentials
-    learn_config=Get_Config('./learn_config.json')    
+    learn_config=Get_Config('./learn_config.json')
+    
     learn_url=learn_config.get_url()
     learn_key=learn_config.get_key()
     learn_secret=learn_config.get_secret()
