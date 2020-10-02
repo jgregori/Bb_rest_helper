@@ -5,19 +5,19 @@
 
 The Bb Rest Helper includes 4 classes to simpilfy common API operations.
 
-1. Get_config. This class is used to get configuration variables (url,key,secret)from an external configuration file in Json format. If you are authenticating for more than one API (i.e. Learn and Collaborate) you will need separate configuration files (i.e. learn_config.json and collab_config.json).
-2. Auth_Helper. This class is used to get the token that then will be used in the API calls. Provides different functions for the different APIs.
-3. Bb_requests. This calsses is used to simplify calls to the Blackboard Rest APIs, provides functions for GET, POST, PUT, PATCH and DELETE requests.
-4. Bb_utils. A set of convenience functions (printing, checking courses...) 
+**1. Get_config.** This class is used to get configuration variables (url,key,secret)from an external configuration file in Json format. If you are authenticating for more than one API (i.e. Learn and Collaborate) you will need separate configuration files (i.e. learn_config.json and collab_config.json).
+**2. Auth_Helper.** This class is used to get the token that then will be used in the API calls. Provides different functions for the different APIs.
+**3. Bb_requests.** This class is used to simplify calls to the Blackboard Rest APIs. Provides functions for GET, POST, PUT, PATCH and DELETE requests.
+**4. Bb_utils.** A set of convenience functions (printing, checking courses...), this will be extended over time.
 
 # SETUP.
 
-1. Register a new application in the developer portal, grab key, secret and application id.
-2. Configure the application in your Learn instance, you will need the application id and a user with the right permissions. DO NOT USE AN ADMIN USER!
-3. Fill the configuration template (config.json).
-4. OPTIONAL--> Create a python3 virtual environment.
-5. Install dependencies via the requirement file. "Pip3 install requirements.txt".
-6. Make the Bb_rest_helper.py file is in the parent directory for your application.
+**1. Register a new application** in the Blackboard developer portal (developer.blackboard.com), grab key, secret and application id.
+**2. Configure the application in your Learn instance** ,you will need the application id and a user with the right permissions. DO NOT USE AN ADMIN USER!
+**3. Fill the configuration template (config.json).**
+**4. OPTIONAL--> Create a python3 virtual environment.**
+**5. Install dependencies via the requirement file. "Pip3 install requirements.txt".**
+**6. Make sure the Bb_rest_helper.py file is in the parent directory for your application.**
 
 # USAGE.
 
@@ -55,7 +55,17 @@ The Bb Rest Helper includes 4 classes to simpilfy common API operations.
     learn_key=learn_config.get_key()
     learn_secret=learn_config.get_secret()
     ```
-4. Get the authentication token by creating an instance of the auth method, and then calling the relevant auth function:
+    configure the logging, otherwise the application will run, but will not provide any info
+    
+    ```
+    config.set_logging()
+    ````
+    default logging level is DEBUG, but this can be changed by passing the Debug level value to the set_logging method
+    
+    ```
+    config.set_logging('logging.WARNING')
+    
+3. Get the authentication token by creating an instance of the auth method, and then calling the relevant auth function:
     ```
     #Collaborate
     collab_auth=Auth_Helper(collab_url,collab_key,collab_secret)
@@ -66,7 +76,7 @@ The Bb Rest Helper includes 4 classes to simpilfy common API operations.
     learn_token=learn_auth.learn_auth()
     
     ```
-5. Example GET call:
+4. Example GET call:
 
 * Create variables for the API endpoint url and the request parameters. The whole endpoint url (i.e https//myserver.blackboard.com/learn/api/public/v3/courses)     needs to be provided  
     ```
