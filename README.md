@@ -16,7 +16,7 @@ The Bb Rest Helper includes 4 classes to simpilfy common API operations.
 2. **Configure the application in your Learn instance** ,you will need the application id and a user with the right permissions. DO NOT USE AN ADMIN USER!
 3. **Fill the configuration template (config.json).**
 4. **OPTIONAL--> Create a python3 virtual environment.**
-5. **Install dependencies via the requirement file.**
+5. **Install dependencies via the requirements.txt file.**
     ```
     Pip3 install -r requirements.txt
     ```
