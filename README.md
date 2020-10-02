@@ -16,7 +16,11 @@ The Bb Rest Helper includes 4 classes to simpilfy common API operations.
 2. **Configure the application in your Learn instance** ,you will need the application id and a user with the right permissions. DO NOT USE AN ADMIN USER!
 3. **Fill the configuration template (config.json).**
 4. **OPTIONAL--> Create a python3 virtual environment.**
-5. **Install dependencies via the requirement file. "Pip3 install requirements.txt".**
+5. **Install dependencies via the requirement file.**
+    ```
+    Pip3 install -r requirements.txt
+    ```
+Pip3 install requirements.txt
 6. **Make sure the Bb_rest_helper.py file is in the parent directory for your application.**
 
 # USAGE.
@@ -39,7 +43,6 @@ The Bb Rest Helper includes 4 classes to simpilfy common API operations.
     secret=config.get_secret()
     ```
     if using more than one API, you will need to use separate configuration files
-    
     ```
     #Get Collab credentials
     collab_config=Get_Config('./collab_config.json')
@@ -56,15 +59,13 @@ The Bb Rest Helper includes 4 classes to simpilfy common API operations.
     learn_secret=learn_config.get_secret()
     ```
     configure the logging, otherwise the application will run, but will not provide any info
-    
     ```
     config.set_logging()
     ````
     default logging level is DEBUG, but this can be changed by passing the Debug level value to the set_logging method
-    
     ```
     config.set_logging('logging.WARNING')
-    
+    ```
 3. Get the authentication token by creating an instance of the auth method, and then calling the relevant auth function:
     ```
     #Collaborate
@@ -74,7 +75,6 @@ The Bb Rest Helper includes 4 classes to simpilfy common API operations.
     #Learn
     learn_auth=Auth_helper(learn_url,learn_key,learn_secret)
     learn_token=learn_auth.learn_auth()
-    
     ```
 4. Example GET call:
 
