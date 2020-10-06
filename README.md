@@ -10,7 +10,7 @@ The Bb Rest Helper includes 4 classes to simpilfy common API operations.
 3. **Bb_requests.** This class is used to simplify calls to the Blackboard Rest APIs. Provides functions for GET, POST, PUT, PATCH and DELETE requests.
 4. **Bb_utils.** A set of convenience functions (printing, checking courses...), this will be extended over time.
 
-# SETUP.
+# SETUP. Make sure you are at least in Python 3.7+!
 
 1. **Register a new application** in the Blackboard developer portal (developer.blackboard.com), grab key, secret and application id.
 2. **Configure the application in your Learn instance** ,you will need the application id and a user with the right permissions. DO NOT USE AN ADMIN USER!
