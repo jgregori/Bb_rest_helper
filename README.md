@@ -110,7 +110,7 @@ The Bb Rest Helper includes 4 classes to simpilfy common API operations.
     }
      ```   
 * if you do not wish to use params, pass an empty dictionary:
-    ````
+    ```
     params={}
     ```
 * Create an instance of Bb_requests, then call the Bb_GET method pasing the endpoint, token and parameters as arguments.
