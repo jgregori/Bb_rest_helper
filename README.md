@@ -15,12 +15,28 @@ The Bb Rest Helper includes 4 classes to simpilfy common API operations.
 1. **Register a new application** in the Blackboard developer portal (developer.blackboard.com), grab key, secret and application id.
 2. **Configure the application in your Learn instance** ,you will need the application id and a user with the right permissions. DO NOT USE AN ADMIN USER!
 3. **Fill the configuration template (config.json).**
-4. **OPTIONAL--> Create a python3 virtual environment.**
-5. **Install dependencies via the requirements.txt file.**
+4. **OPTIONAL--> Create a python3 virtual environment.** A virtual environment will provide you with a separate and clean instalation of Python just for the        project you are working on, this is really helpful to avoid issues with libraries and dependencies across projects.
+   You can create a virtual environment by installint the virtualenv python librarly
+    ```
+    Pip3 install virtualenv
+    ```
+    then you create a virtual environment by navigating to the desired folder for your application and using the command:
+     ```
+    Python3 -m venv env 
+    ```
+    you can activate this virtual environment by using the command:
+    ```
+    source env/bin/activate
+    ```
+    Once you are done, you can just deactivate the virtual environment by using:
+    ```
+    deactivate
+    ```
+  
+5. **Install dependencies via the requirements.txt file.** (if you are using a virtual environment, make sure it is active before installing                  dependencies/libraries, otherwise you will be installing those in your global python environment)
     ```
     Pip3 install -r requirements.txt
     ```
-Pip3 install requirements.txt
 6. **Make sure the Bb_rest_helper.py file is in the parent directory for your application.**
 
 # USAGE.
