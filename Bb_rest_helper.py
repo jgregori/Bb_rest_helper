@@ -1,5 +1,6 @@
 import json
 import logging
+import os
 import time
 from datetime import datetime
 
@@ -38,12 +39,6 @@ class Get_Config():
     #Returns secret value from the configuration file to a variable
     def get_secret(self):
         return self.data["secret"]
-
-    #Sets logging with default level of DEBUG. 
-    def set_logging(self, level=logging.DEBUG):
-        self.level = level
-        logging.basicConfig(
-            filename=f'./logs/Bb_helper_log_{datetime.now()}', filemode="w", level=self.level)
 
 #Auth_Helper
 #A class to simplify REST API authentication for the Blackboard API.
@@ -219,8 +214,23 @@ class Bb_requests():
             data = json.loads(r.text)
             logging.error(data["message"])
 
-    
+#A set of convenience functions (logging, printing, checking courses...), this will be extended over time.   
 class Bb_Utils():
+
+    #Sets logging with default path to ./logs and default level of DEBUG. 
+    def set_logging(self, path='./logs', level=logging.DEBUG):
+        self.path= path
+        self.level = level
+        try:
+            os.mkdir(self.path,0o777)
+            logging.basicConfig(
+            filename=f'{self.path}/Bb_helper_log_{datetime.now()}', filemode="w", level=self.level)
+            logging.info('Logs folder created')
+            logging.info('Logging has been set up')
+        except FileExistsError:
+            logging.basicConfig(
+            filename=f'{self.path}/Bb_helper_log_{datetime.now()}', filemode="w", level=self.level)
+            logging.info('Logging has been set up')
 
     #Prints the response from any of the above methods in a prettified format to the console.
     def pretty_printer(self, data):
