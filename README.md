@@ -119,7 +119,8 @@ Once you have the right credentials in place and your application is registered 
     ```
 4. Example GET call:
 
-Create variables for the API endpoint url and the request parameters. The whole endpoint url (i.e https//myserver.blackboard.com/learn/api/public/v3/courses)     needs to be provided  
+Create variables for the API endpoint url and the request parameters. The whole endpoint url (i.e https//myserver.blackboard.com/learn/api/public/v3/courses)     needs to be provided.
+
     ```
     #Learn GET Courses endpoint and params example
     courses_endpoint=f'{learn_url}/learn/api/public/v3/courses"
@@ -133,7 +134,7 @@ Create variables for the API endpoint url and the request parameters. The whole 
     params={
         "limit":"10"
     }
-     ```   
+    ```   
 If you do not wish to use params, pass an empty dictionary:
     ```
     params={}
