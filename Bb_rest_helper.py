@@ -39,6 +39,10 @@ class Get_Config():
     #Returns secret value from the configuration file to a variable
     def get_secret(self):
         return self.data["secret"]
+    
+    #(ALLY ONLY) Returns client_id from the configuration file to a variable
+    def get_client_id(self):
+        return self.data["client_id"]
 
 #Auth_Helper
 #A class to simplify REST API authentication for the Blackboard API.
@@ -98,6 +102,101 @@ class Auth_Helper():
         except requests.exceptions.HTTPError as e:
             data = json.loads(r.text)
             logging.error(data["error"])
+    
+#A separate class to support Ally as a service requests.
+#it is separated as it uses different authentication and has
+#a still limited set of features
+class Ally_Helper():
+
+    #Initializes the auth helper by taking the target system url,
+    # PI key and secret as arguments.
+    def __init__(self, url, client_id, key, secret):
+        self.url= url
+        self.client_id= client_id
+        self.key= key
+        self.secret= secret
+
+    #Returns the authentication token for Blackboard Ally. Ally does not use 
+    #a post call to an endpoint, instead, it encodes a jwt assertion that then
+    #is passed as a Bearer token.
+    def ally_auth(self):
+        self.iat= str(int(time.time()))
+        self.headers= {
+            'typ':'JWT',
+            'alg': "Rs256"
+            }
+        self.claims= {
+            "clientId": self.client_id ,
+            "iat": self.iat
+        } 
+        self.assertion= jwt.encode(self.claims, self.secret).decode("utf-8")
+        self.ally_token= str(self.assertion)   
+        return self.ally_token
+
+    #Uploads a file to ally service, getting the path to the file and the auth header
+    #arguments
+    def ally_upload_file(self, token, file_path):
+        self.file_path= file_path
+        self.token= token
+        self.headers= {
+            "Authorization":f'Bearer {self.token}'
+        }
+        self.ally_url= f'{self.url}/api/v2/clients/{self.client_id}/content'
+        self.files= {
+            'file': open(file_path,'rb')
+            }
+        try:
+            r= requests.request('POST',self.ally_url,files= self.files,headers=self.headers)
+            r.raise_for_status()
+            data= json.loads(r.text)
+            logging.info('File uploaded to Ally, check processing status via ally_check_status()')
+            return data
+        except requests.exceptions.HTTPError as e:
+            logging.warning('An error occured during the request')
+    
+    #Returns the file hash to be used in the next requests from the upload request response
+    def ally_get_hash(self,upload_response):
+        self.upload_response= upload_response
+        logging.info('Hash value extracted to a variable')
+        return self.upload_response["hash"]
+
+    #Checks the status of a file upload to Ally as a service, takes toekn and content hash
+    #as arguments.
+    def ally_check_status(self, token, content_hash):
+        self.content_hash= content_hash
+        self.token= token
+        self.headers= {
+            "Authorization":f'Bearer {self.token}'
+        }
+        self.check_url=f'{self.url}/api/v2/clients/{self.client_id}/content/{content_hash}/status'
+        try:
+            r= requests.request('GET',self.check_url,headers=self.headers)
+            r.raise_for_status()
+            data=json.loads(r.text)
+            logging.info('status checked. See response for details')
+            return data
+        except requests.exceptions.HTTPError as e:
+            logging.warning('An error occured during the request')
+
+    def ally_get_feedback(self, token, content_hash,feedback=True):
+        self.content_hash= content_hash
+        self.token= token
+        self.feedback= feedback
+        self.feedback_url=f'{self.url}/api/v2/clients/{self.client_id}/content/{content_hash}'
+        self.headers= {
+            "Authorization":f'Bearer {self.token}'
+        }
+        self.params={
+            "feedback":self.feedback
+        }
+        try:
+            r= requests.request('GET',self.feedback_url,headers=self.headers,params=self.params)
+            r.raise_for_status()
+            data=json.loads(r.text)
+            logging.info('Feedback obtained, see response for details')
+            return data
+        except requests.exceptions.HTTPError as e:
+            logging.warning('An error occured during the request')
 
 #Bb_requests
 #A class to simplify API calls to Blackboard REST APIs, provides functions 

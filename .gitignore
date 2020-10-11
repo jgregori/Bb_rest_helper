@@ -2,6 +2,7 @@
 config.json
 learn_config.json
 collab_config.json
+ally_config.json
 
 # Editors
 .vscode/
