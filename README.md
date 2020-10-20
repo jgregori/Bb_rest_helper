@@ -1,7 +1,7 @@
 # Bb_rest_helper (BETA).
 ## A Python 3 library to simplify working with Blackboard APIs.
 
-This library is intended to explore Blackboard REST APIs and to help create POCs for integrations 
+This library is intended to explore Blackboard REST APIs and to help create POCs for integrations. This tool is not intended to be used in production and not warranties of any kind are provided. 
 
 # DESCRIPTION.
 
