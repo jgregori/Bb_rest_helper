@@ -120,7 +120,7 @@ Once you have the right credentials in place and your application is registered 
     ```
 4. Example GET call:
 
-Create variables for the API endpoint url and the request parameters. The whole endpoint url (i.e https//myserver.blackboard.com/learn/api/public/v3/courses)     needs to be provided.
+   Create variables for the API endpoint url and the request parameters. The whole endpoint url (i.e https//myserver.blackboard.com/learn/api/public/v3/courses)    needs to be provided.
 
     ```
     #Learn GET Courses endpoint and params example
@@ -136,11 +136,12 @@ Create variables for the API endpoint url and the request parameters. The whole 
         "limit":"10"
     }
     ```   
-If you do not wish to use params, pass an empty dictionary:
-    ```
-    params={}
-    ```
-Create an instance of Bb_requests, then call the Bb_GET method pasing the endpoint, token and parameters as arguments.
+   If you do not wish to use params, pass an empty dictionary:
+    
+   ````
+   params={}
+   ````
+   Create an instance of Bb_requests, then call the Bb_GET method pasing the endpoint, token and parameters as arguments.
     ```
     #Create an instance of the Bb_requests class
     reqs=Bb_requests()
@@ -151,8 +152,7 @@ Create an instance of Bb_requests, then call the Bb_GET method pasing the endpoi
     #Collab GET example
     collab_data=reqs.Bb_GET(session_endpoint,collab_token,params)
     ```
-    
-    Create an instace of teh Bb_utils class, then Use the pretty_printer method to print the  results to the console
+   Create an instace of teh Bb_utils class, then Use the pretty_printer method to print the  results to the console
     
     ```
     #Create an instance of the Bb_utils class
@@ -161,6 +161,7 @@ Create an instance of Bb_requests, then call the Bb_GET method pasing the endpoi
     # Uuse the pretty printer method to print results to the console
     helper.pretty_printer(GET_course)
     ```
+    
 5. Differences between a **POST, PUT, PATCH** requests.
 
     the only difference is that these requests need an additional JSON payload, as per the API definition, to be able to create and/or update records, also the right method needs to be selected from the Bb_request class (i.e. Bb_POST for a post request).
