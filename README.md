@@ -1,5 +1,7 @@
-# Bb_rest_helper (BETA)
-## A Python 3 library to simplify working with Blackboard APIs
+# Bb_rest_helper (BETA).
+## A Python 3 library to simplify working with Blackboard APIs.
+
+This library is intended to explore Blackboard REST APIs and to help create POCs for integrations 
 
 # DESCRIPTION
 
@@ -27,6 +29,8 @@ The first step is to get the right credentials for the API that you will be usin
 ## For ALLY as a service.
 1. **You need a client id, key and secret.** At this time, the best way to obtain this information is to engage your Account Executive to discuss pricing and request credentials. As the API continues to grow, this process may change.
 2. **Fill the configuration template (config.json).** you may want to rename to "Ally_config.json" to keep track of the changes.
+
+# ENVIRONMENT SETUP.
 
 Once you have the right credentials in place and your application is registered (if needed). You need to set up your environment:
 
@@ -166,7 +170,6 @@ Once you have the right credentials in place and your application is registered 
 
     the only difference is that these requests need an additional JSON payload, as per the API definition, to be able to create and/or update records, also the right method needs to be selected from the Bb_request class (i.e. Bb_POST for a post request).
     
-        ```
         #example of a json payload to create courses in Learn
         payload={
         "externalId": "Javier_API_003",
@@ -181,8 +184,8 @@ Once you have the right credentials in place and your application is registered 
             "type": "Continuous",
                 },
             },
-        }
-        ```
+         }
+         
 6. **Ally Helper usage**
 
     Get the athentication token as described in section 3
