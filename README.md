@@ -8,16 +8,16 @@ The Bb Rest Helper includes 5 classes to simpilfy common API operations.
 1. **Get_Config.** This class is used to get configuration variables (url,key,secret)from an external configuration file in Json format. If you are             authenticating for more than one API (i.e. Learn and Collaborate) you will need separate configuration files (i.e. learn_config.json and collab_config.json).
 2. **Auth_Helper.** This class is used to get the token that then will be used in the API calls. Provides different methods for the different APIs.
 3. **Bb_Requests.** This class is used to simplify calls to the Blackboard Rest APIs. Provides methods for GET, POST, PUT, PATCH and DELETE requests.
-4. **Bb_Utils.** A set of convenience functions (Logging,printing, checking courses...), this will be extended over time.
-5. **Ally_Helper** This class is used to simplify interaction with Ally as a service, includes methods to authenticate, upload a file, check processing status and retrieve the feedback. As it is an initial release for this API with limited features, it is implemented as a separate class to provide easier access to these methods rather than having to code them manually or with the Bb_helper library.
+4. **Bb_Utils.** A set of convenience functions (Logging, printing...), this will be extended over time.
+5. **Ally_Helper** This class is used to simplify interaction with Ally as a service, includes methods to authenticate, upload a file, check processing status and retrieve the feedback. As it is an initial release for this API with limited features, it is implemented as a separate class to provide easier access to these methods rather than having to code them manually or with the Bb_rest_helper library.
 
 # SETUP. Make sure you are at least in Python 3.7+!
 
-The first step is to get the right credentials for the API that you will be using. Depending on the API, the process may be a bit different
+The first step is to get the right credentials for the API that you will be using. Depending on the API, the process may be a bit different, we offer a summary, but please check docs.blackboard.com for the full picture.
 
 ## For Blackboard Learn:
 1. **Register a new application** in the Blackboard developer portal (developer.blackboard.com), grab key, secret and application id.
-2. **Configure the application in your Learn instance**. You will need the application id and a user with the right permissions. DO NOT USE AN ADMIN USER!
+2. **Configure the application in your Learn instance**. You will need the application id and a user with the right permissions. **DO NOT USE AN ADMIN USER!**
 3. **Fill the configuration template (config.json).** You may want to rename to "learn_config.json" to keep track of the changes.
 
 ## For Blackboard Collaborate:
@@ -25,13 +25,14 @@ The first step is to get the right credentials for the API that you will be usin
 2. **Fill the configuration template (config.json).** you may want to rename to "collab_config.json" to keep track of the changes.
 
 ## For ALLY as a service.
-1. **You need a client id, key and secret.** At this time, the best way to obtain this information is to engage your Account Executive to discuss pricing and request credentials. As the API continues to grow, this process may chang
+1. **You need a client id, key and secret.** At this time, the best way to obtain this information is to engage your Account Executive to discuss pricing and request credentials. As the API continues to grow, this process may change.
 2. **Fill the configuration template (config.json).** you may want to rename to "Ally_config.json" to keep track of the changes.
 
-Once you have the right credentials in place and your application is registered (if needed). You need to set up your environment.
+Once you have the right credentials in place and your application is registered (if needed). You need to set up your environment:
 
 1. **OPTIONAL--> Create a python3 virtual environment.** A virtual environment will provide you with a separate and clean instalation of Python just for the        project you are working on, this is really helpful to avoid issues with libraries and dependencies across projects.
-   You can create a virtual environment by installint the virtualenv python librarly
+   
+   You can create a virtual environment by installing the virtualenv python library.
     ```
     Pip3 install virtualenv
     ```
@@ -48,17 +49,17 @@ Once you have the right credentials in place and your application is registered 
     deactivate
     ```
   
-2. **Install dependencies via the requirements.txt file.** (if you are using a virtual environment, make sure it is active before installing              dependencies/libraries, otherwise you will be installing those in your global python environment)
+2. **Install dependencies via the requirements.txt file.** (if you are using a virtual environment, make sure it is active before installing                        dependencies/libraries, otherwise you will be installing those in your global python environment)
     ```
     Pip3 install -r requirements.txt
     ```
-3. **Make sure the Bb_rest_helper.py file is in the parent directory for your application.**
+3. **Make sure the Bb_rest_helper.py file is in the parent directory for your application.** †here are are plans to release this library as a python package to be installed with pip, until then download the files and place the Bb_Rest_helper.py in the root folder for your application.
 
 # USAGE.
 
 1. Imports:
     ```
-    #Use the ones that you need!
+    #Import the classes that you need!
     from Bb_rest_helper import Get_Config
     from Bb_rest_helper import Auth_Helper
     from Bb_rest_helper import Bb_requests
@@ -91,14 +92,14 @@ Once you have the right credentials in place and your application is registered 
     learn_key=learn_config.get_key()
     learn_secret=learn_config.get_secret()
     ```
-    Configure the logging, otherwise the application will run, but will not provide any info. To do so create an instance of the Bb_utils class and set the logging
+    Configure the logging, otherwise the application will run, but will not provide any info. To do so create an instance of the Bb_utils class and set the           logging
     ```
     #Create an instance of the Bb_utils class
     utils=Bb_utils()
     #Set the logging, default does not require arguments
     utils.set_logging()
     ````
-    Default logging level is DEBUG, but this can be changed by passing the Debug level value to the set_logging method. it is also possible to change the path for the logs folder, but currently only within the the main folder of the application.
+    Default logging level is DEBUG, but this can be changed by passing the Debug level value to the set_logging method. it is also possible to change the path       for the logs folder, but currently only within the the main folder of the application.
     ```
     config.set_logging('logging.WARNING','./different_folder')
     ```
@@ -150,7 +151,9 @@ Create an instance of Bb_requests, then call the Bb_GET method pasing the endpoi
     #Collab GET example
     collab_data=reqs.Bb_GET(session_endpoint,collab_token,params)
     ```
-Create an instace of teh Bb_utils class, then Use the pretty_printer method to print the  results to the console
+    
+    Create an instace of teh Bb_utils class, then Use the pretty_printer method to print the  results to the console
+    
     ```
     #Create an instance of the Bb_utils class
     utils=Bb_utils()
@@ -160,8 +163,9 @@ Create an instace of teh Bb_utils class, then Use the pretty_printer method to p
     ```
 5. Differences between a **POST, PUT, PATCH** requests.
 
-    the only difference is that these requests need an additional JSON payload, as per the API definition, to be able to create and/or update records, also the right method needs to be selected from the Bb_request class (i.e. Bb_POST for a post request)
-     ```
+    the only difference is that these requests need an additional JSON payload, as per the API definition, to be able to create and/or update records, also the right method needs to be selected from the Bb_request class (i.e. Bb_POST for a post request).
+    
+        ```
         #example of a json payload to create courses in Learn
         payload={
         "externalId": "Javier_API_003",
