@@ -3,7 +3,7 @@
 
 This library is intended to explore Blackboard REST APIs and to help create POCs for integrations 
 
-# DESCRIPTION
+# DESCRIPTION.
 
 The Bb Rest Helper includes 5 classes to simpilfy common API operations.
 
@@ -168,7 +168,7 @@ Once you have the right credentials in place and your application is registered 
     
 5. Differences between a **POST, PUT, PATCH** requests.
 
-    the only difference is that these requests need an additional JSON payload, as per the API definition, to be able to create and/or update records, also the right method needs to be selected from the Bb_request class (i.e. Bb_POST for a post request).
+   The only difference is that these requests need an additional JSON payload, as per the API definition, to be able to create and/or update records, also the      right method needs to be selected from the Bb_request class (i.e. Bb_POST for a post request).
     
         #example of a json payload to create courses in Learn
         payload={
