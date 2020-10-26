@@ -305,10 +305,10 @@ class Bb_requests():
         try:
             r = requests.request(
                 'DELETE', self.endpoint, headers=self.headers, params=self.params)
-            data = json.loads(r.text)
+            #A successful DELETE request returns a 204 code meaning that the server has
+            #fulfilled the request but that there is no content to return.
             r.raise_for_status()
             logging.info("DELETE Request completed")
-            return data
         except requests.exceptions.HTTPError as e:
             data = json.loads(r.text)
             logging.error(data["message"])
