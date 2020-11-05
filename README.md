@@ -34,9 +34,8 @@ The first step is to get the right credentials for the API that you will be usin
 
 Once you have the right credentials in place and your application is registered (if needed). You need to set up your environment:
 
-1. **OPTIONAL--> Create a python3 virtual environment.** A virtual environment will provide you with a separate and clean instalation of Python just for the        project you are working on, this is really helpful to avoid issues with libraries and dependencies across projects.
-   
-   You can create a virtual environment by installing the virtualenv python library.
+1. **OPTIONAL--> Create a python3 virtual environment.** A virtual environment will provide you with a separate and clean instalation of Python just for the project you are working on, this is really helpful to avoid issues with libraries and dependencies across projects.
+   You can create a virtual environment by installint the virtualenv python librarly
     ```
     Pip3 install virtualenv
     ```
@@ -53,7 +52,7 @@ Once you have the right credentials in place and your application is registered 
     deactivate
     ```
   
-2. **Install dependencies via the requirements.txt file.** (if you are using a virtual environment, make sure it is active before installing                        dependencies/libraries, otherwise you will be installing those in your global python environment)
+2. **Install dependencies via the requirements.txt file.** (if you are using a virtual environment, make sure it is active before installing dependencies/libraries, otherwise you will be installing those in your global python environment)
     ```
     Pip3 install -r requirements.txt
     ```
@@ -103,7 +102,8 @@ Once you have the right credentials in place and your application is registered 
     #Set the logging, default does not require arguments
     utils.set_logging()
     ````
-    Default logging level is DEBUG, but this can be changed by passing the Debug level value to the set_logging method. it is also possible to change the path       for the logs folder, but currently only within the the main folder of the application.
+    Default logging level is DEBUG, but this can be changed by passing the desired level value to the set_logging method. it is also possible to change the path for the logs folder, but currently only within the the main folder of the application.
+
     ```
     config.set_logging('logging.WARNING','./different_folder')
     ```
@@ -168,8 +168,8 @@ Once you have the right credentials in place and your application is registered 
     
 5. Differences between a **POST, PUT, PATCH** requests.
 
-   The only difference is that these requests need an additional JSON payload, as per the API definition, to be able to create and/or update records, also the      right method needs to be selected from the Bb_request class (i.e. Bb_POST for a post request).
-    
+    The only difference is that these requests need an additional JSON payload, as per the API definition, to be able to create and/or update records, also the right method needs to be selected from the Bb_request class (i.e. Bb_POST for a post request).
+     ```
         #example of a json payload to create courses in Learn
         payload={
         "externalId": "Javier_API_003",

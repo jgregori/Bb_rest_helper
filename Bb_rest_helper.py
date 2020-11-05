@@ -196,7 +196,7 @@ class Ally_Helper():
             logging.info('Feedback obtained, see response for details')
             return data
         except requests.exceptions.HTTPError as e:
-            logging.warning('An error occured during the request')
+            logging.error('An error occured during the request', exc_info=True)
 
 #Bb_requests
 #A class to simplify API calls to Blackboard REST APIs, provides functions 
@@ -222,7 +222,7 @@ class Bb_requests():
             return data
         except requests.exceptions.HTTPError as e:
             data = json.loads(r.text)
-            logging.error(data["error_description"])
+            logging.error(data["message"])
 
     #POST request. It takes a POST endpoint from the API, the authentication token,
     #a list of parameters, and a json payload as arguments.
@@ -323,7 +323,7 @@ class Bb_Utils():
         try:
             os.mkdir(self.path,0o777)
             logging.basicConfig(
-            filename=f'{self.path}/Bb_helper_log_{datetime.now()}', filemode="w", level=self.level)
+            format = '%(asctime)-15s %(name)-22s %(funcName)-15s %(levelname)-8s %(message)s',filename=f'{self.path}/Bb_helper_log_{datetime.now()}', filemode="w", level=self.level)
             logging.info('Logs folder created')
             logging.info('Logging has been set up')
         except FileExistsError:
@@ -332,10 +332,14 @@ class Bb_Utils():
             logging.info('Logging has been set up')
 
     #Prints the response from any of the above methods in a prettified format to the console.
-    def pretty_printer(self, data):
+    def pretty_printer(self, data, sort_keys=True):
         self.data = data
-        print(json.dumps(self.data, indent=4, sort_keys=True))
-        logging.info("Results printed to the console.")
+        self.sort_keys = sort_keys
+        if data: 
+            print(json.dumps(self.data, indent=4, sort_keys=self.sort_keys))
+            logging.info("Results printed to the console.")
+        else:
+            logging.warning("No data to print.")
 
     # Checks if a given Learn course exists in the server
     def check_course_id(self, course_id):
@@ -358,7 +362,7 @@ class Bb_Utils():
                 return True
             else:
                 logging.warning(
-                    'The course could not be found, pelase check that the provided course id is the external id')
+                    'The course could not be found, please check that the provided course id is the external id')
                 return False
         except requests.exceptions.HTTPError as e:
             data = json.loads(r.text)
