@@ -124,7 +124,7 @@ Once you have the right credentials in place and your application is registered 
     ```
 4. Example GET call:
 
-   Create variables for the API endpoint url and the request parameters. The whole endpoint url (i.e https//myserver.blackboard.com/learn/api/public/v3/courses)    needs to be provided.
+   Create variables for the API endpoint url and the request parameters. The whole endpoint url (i.e https//myserver.blackboard.com/learn/api/public/v3/courses) needs to be provided.
 
     ```
     #Learn GET Courses endpoint and params example
@@ -156,7 +156,7 @@ Once you have the right credentials in place and your application is registered 
     #Collab GET example
     collab_data=reqs.Bb_GET(session_endpoint,collab_token,params)
     ```
-   Create an instace of teh Bb_utils class, then Use the pretty_printer method to print the  results to the console
+   Create an instace of teh Bb_utils class, then Use the pretty_printer method to print the results to the console
     
     ```
     #Create an instance of the Bb_utils class
