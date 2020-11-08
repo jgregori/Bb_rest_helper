@@ -1,13 +1,13 @@
 # Bb_rest_helper (BETA).
 ## A Python 3 library to simplify working with Blackboard APIs.
 
-This library is intended to explore Blackboard REST APIs and to help create POCs for integrations. This tool is not intended to be used in production and not warranties of any kind are provided. 
+This library is intended to explore Blackboard REST APIs and to help create POCs for integrations. **This tool is not intended to be used in production and no warranties of any kind are provided.** 
 
 # DESCRIPTION.
 
 The Bb Rest Helper includes 5 classes to simpilfy common API operations.
 
-1. **Get_Config.** This class is used to get configuration variables (url,key,secret)from an external configuration file in Json format. If you are             authenticating for more than one API (i.e. Learn and Collaborate) you will need separate configuration files (i.e. learn_config.json and collab_config.json).
+1. **Get_Config.** This class is used to get configuration variables (url,key,secret)from an external configuration file in Json format. If you are authenticating for more than one API (i.e. Learn and Collaborate) you will need separate configuration files (i.e. learn_config.json and collab_config.json).
 2. **Auth_Helper.** This class is used to get the token that then will be used in the API calls. Provides different methods for the different APIs.
 3. **Bb_Requests.** This class is used to simplify calls to the Blackboard Rest APIs. Provides methods for GET, POST, PUT, PATCH and DELETE requests.
 4. **Bb_Utils.** A set of convenience functions (Logging, printing...), this will be extended over time.
@@ -52,12 +52,12 @@ Once you have the right credentials in place and your application is registered 
     deactivate
     ```
   
-2. **Install dependencies via the requirements.txt file.** (if you are using a virtual environment, make sure it is active before installing dependencies/libraries, otherwise you will be installing those in your global python environment)
-    ```
-    Pip3 install -r requirements.txt
-    ```
-3. **Make sure the Bb_rest_helper.py file is in the parent directory for your application.** †here are are plans to release this library as a python package to be installed with pip, until then download the files and place the Bb_Rest_helper.py in the root folder for your application.
-
+2. **Install the Bb_rest_helper package from PYPI (using PIP).** To do this, simply use the PIP command or PIP3, depending
+   on how your python  was installed.
+   ```
+   pip3 install Bb_rest_helper
+   ```
+   
 # USAGE.
 
 1. Imports:
@@ -95,7 +95,7 @@ Once you have the right credentials in place and your application is registered 
     learn_key=learn_config.get_key()
     learn_secret=learn_config.get_secret()
     ```
-    Configure the logging, otherwise the application will run, but will not provide any info. To do so create an instance of the Bb_utils class and set the           logging
+    Configure the logging, otherwise the application will run, but will not provide any info. To do so create an instance of the Bb_utils class and set the logging by using the set_logging() method
     ```
     #Create an instance of the Bb_utils class
     utils=Bb_utils()
