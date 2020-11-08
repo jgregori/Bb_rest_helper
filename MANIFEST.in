@@ -1,0 +1,4 @@
+include *.json
+include *.md
+include *.txt
+recursive-include src *.py
