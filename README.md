@@ -1,11 +1,11 @@
-# Bb_rest_helper (BETA).
+# Bb_rest_helper.
 ## A Python 3 library to simplify working with Blackboard APIs.
 
 This library is intended to explore Blackboard REST APIs and to help create POCs for integrations. **This tool is not intended to be used in production and no warranties of any kind are provided.** 
 
 # DESCRIPTION.
 
-The Bb Rest Helper includes 5 classes to simpilfy common API operations.
+The Bb Rest Helper includes 5 classes to simpilfy common API operations with Blackboard APIs.
 
 1. **Get_Config.** This class is used to get configuration variables (url,key,secret)from an external configuration file in Json format. If you are authenticating for more than one API (i.e. Learn and Collaborate) you will need separate configuration files (i.e. learn_config.json and collab_config.json).
 2. **Auth_Helper.** This class is used to get the token that then will be used in the API calls. Provides different methods for the different APIs.
@@ -18,15 +18,18 @@ The Bb Rest Helper includes 5 classes to simpilfy common API operations.
 The first step is to get the right credentials for the API that you will be using. Depending on the API, the process may be a bit different, we offer a summary, but please check docs.blackboard.com for the full picture.
 
 ## For Blackboard Learn:
+
 1. **Register a new application** in the Blackboard developer portal (developer.blackboard.com), grab key, secret and application id.
 2. **Configure the application in your Learn instance**. You will need the application id and a user with the right permissions. **DO NOT USE AN ADMIN USER!**
 3. **Fill the configuration template (config.json).** You may want to rename to "learn_config.json" to keep track of the changes.
 
 ## For Blackboard Collaborate:
+
 1. **Use REST API credentials or LTI integration credentials.** REST credentials are standalone (not connected to your institution´s login group) and can be obtained by writing to developers@blackboard.com. LTI credentials are the same that you would use to configure Collaborate in your LMS, and can be obtained from Blackboard support. Any changes in your production system as a result of API testing is at your sole responsability.
 2. **Fill the configuration template (config.json).** you may want to rename to "collab_config.json" to keep track of the changes.
 
-## For ALLY as a service.
+## For ALLY as a service:
+
 1. **You need a client id, key and secret.** At this time, the best way to obtain this information is to engage your Account Executive to discuss pricing and request credentials. As the API continues to grow, this process may change.
 2. **Fill the configuration template (config.json).** you may want to rename to "Ally_config.json" to keep track of the changes.
 
@@ -69,9 +72,9 @@ Once you have the right credentials in place and your application is registered 
     from Bb_rest_helper import Bb_Utils
     from Bb_rest_helper import Ally_Helper
     ```
-2. create an instance of the Get_config class to get configuration values from a Json file: 
+2. create an instance of the Get_config class to get configuration values from a JSON file: 
     ```
-    #create an instance of the Get_config class
+    #create an instance of the Get_config class.
     config=Get_Config('./collab_config.json')
 
     #Get configuration values
@@ -79,7 +82,7 @@ Once you have the right credentials in place and your application is registered 
     key=config.get_key()
     secret=config.get_secret()
     ```
-    If using more than one API, you will need to use separate configuration files
+    If using more than one API, you will need to use separate configuration files.
     ```
     #Get Collab credentials
     collab_config=Get_Config('./collab_config.json')
@@ -95,7 +98,9 @@ Once you have the right credentials in place and your application is registered 
     learn_key=learn_config.get_key()
     learn_secret=learn_config.get_secret()
     ```
-    Configure the logging, otherwise the application will run, but will not provide any info. To do so create an instance of the Bb_utils class and set the logging by using the set_logging() method
+    Note that if the path of the configuration file is incorrect, the program will be terminated and an error will be logged. Make sure that your configuration files are in the right path.
+
+    Configure the logging, otherwise the application will run, but will not provide any info. To do so create an instance of the Bb_utils class and set the logging by using the set_logging() method.
     ```
     #Create an instance of the Bb_utils class
     utils=Bb_utils()
@@ -195,7 +200,7 @@ Once you have the right credentials in place and your application is registered 
     ally_auth=Ally_Helper(ally_url, client_id, ally_key, ally_secret)
     ally_token=ally_auth.ally_auth()
     ```
-    Upload a file, providing the token and the file path.
+    Upload a file to be checked for accesibility, providing the token and the file path. Make sure to provide a supported file
     ```
     upload=ally_upload_file(ally_token,'./file.docx')
     ```
