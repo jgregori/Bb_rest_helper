@@ -1,6 +1,7 @@
 import json
 import logging
 import os
+import sys
 import time
 from datetime import datetime
 
@@ -25,8 +26,13 @@ class Get_Config():
     #as an argument, a typical value would be "./config.json".
     def __init__(self, file_path):
         self.file_path = file_path
-        with open(self.file_path) as conf:
-            self.data = json.load(conf)
+        try:
+            with open(self.file_path) as conf:
+                self.data = json.load(conf)
+                logging.info("Configuration file loaded")
+        except FileNotFoundError as e:
+            logging.error('No configuration file found - Exit program')
+            sys.exit()
 
     #Returns url value from the configuration file to a variable
     def get_url(self):
@@ -328,7 +334,7 @@ class Bb_Utils():
             logging.info('Logging has been set up')
         except FileExistsError:
             logging.basicConfig(
-            filename=f'{self.path}/Bb_helper_log_{datetime.now()}', filemode="w", level=self.level)
+            format = '%(asctime)-15s %(name)-22s %(funcName)-15s %(levelname)-8s %(message)s',filename=f'{self.path}/Bb_helper_log_{datetime.now()}', filemode="w", level=self.level)
             logging.info('Logging has been set up')
 
     #Prints the response from any of the above methods in a prettified format to the console.
