@@ -55,10 +55,9 @@ Once you have the right credentials in place and your application is registered 
     deactivate
     ```
   
-2. **Install the Bb_rest_helper package from PYPI (using PIP).** To do this, simply use the PIP command or PIP3, depending
-   on how your python  was installed.
+2. **Install the Bb_rest_helper package from PYPI (using PIP).** To do this, simply use the PIP command or PIP3, depending on how your python  was installed.
    ```
-   pip3 install Bb_rest_helper
+   pip3 install Bb-rest-helper
    ```
    
 # USAGE.
