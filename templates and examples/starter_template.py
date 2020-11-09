@@ -5,7 +5,7 @@
 from Bb_rest_helper import Bb_Utils
 from Bb_rest_helper import Get_Config
 from Bb_rest_helper import Auth_Helper
-from Bb_rest_helper import Bb_requests
+from Bb_rest_helper import Bb_Requests
 
 from Bb_rest_helper import Ally_Helper
 
@@ -46,7 +46,7 @@ ally_auth = Ally_Helper(ally_url, ally_clientId, ally_key, ally_secret)
 ally_auth = ally_auth.ally_auth()
 
 #Rest API calls
-reqs = Bb_requests()
+reqs = Bb_Requests()
 
 #Example Collaborate GET sessions request (limited to the 10 first results)
 sessions_url= f'{collab_url}/sessions'
