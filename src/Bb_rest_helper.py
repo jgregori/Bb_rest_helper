@@ -204,10 +204,10 @@ class Ally_Helper():
         except requests.exceptions.HTTPError as e:
             logging.error('An error occured during the request', exc_info=True)
 
-#Bb_requests
+#Bb_Requests
 #A class to simplify API calls to Blackboard REST APIs, provides functions 
 #for GET, POST, PUT, PATCH and DELETE
-class Bb_requests():
+class Bb_Requests():
 
     #GET request. It takes a GET endpoint from the API, the authentication
     #token and a list of parameters as arguments.

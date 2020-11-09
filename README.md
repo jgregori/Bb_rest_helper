@@ -67,7 +67,7 @@ Once you have the right credentials in place and your application is registered 
     #Import the classes that you need!
     from Bb_rest_helper import Get_Config
     from Bb_rest_helper import Auth_Helper
-    from Bb_rest_helper import Bb_requests
+    from Bb_rest_helper import Bb_Requests
     from Bb_rest_helper import Bb_Utils
     from Bb_rest_helper import Ally_Helper
     ```
@@ -149,10 +149,10 @@ Once you have the right credentials in place and your application is registered 
    ````
    params={}
    ````
-   Create an instance of Bb_requests, then call the Bb_GET method pasing the endpoint, token and parameters as arguments.
+   Create an instance of Bb_Requests, then call the Bb_GET method pasing the endpoint, token and parameters as arguments.
     ```
-    #Create an instance of the Bb_requests class
-    reqs=Bb_requests()
+    #Create an instance of the Bb_Requests class
+    reqs=Bb_Requests()
     
     #Learn GET example
     learn_data=reqs.Bb_GET(courses_endpoint,learn_token,params)
