@@ -373,3 +373,32 @@ class Bb_Utils():
         except requests.exceptions.HTTPError as e:
             data = json.loads(r.text)
             logging.error(data["message"])
+
+    #This method is provided to facilitate date formatting when importing dates from
+    #other applications, i.e, dates in excel format, it can take a date string with
+    #the following formats
+    #DD/MM/YYYY
+    #DD/MM/YYYY HH:MM
+    #DD/MM/YYYY HH:MM:SS
+    #optional arguments for date delimiter (default "/") and hour delimiter (default ":")
+    #can be provided. The outcome of the method is YYYY-MM-DDTHH:MM:SS:000Z 
+    def time_format(self,date, date_delimiter = "/", hour_delimiter = ":"):
+        self.date = date
+        self.date_delimiter = date_delimiter
+        self.hour_delimiter = hour_delimiter
+        if len(date)< 11:
+            split_date = date.split(self.date_delimiter)
+            date_formatted= datetime(int(split_date[2]),int(split_date[1]),int(split_date[0])).strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3]+'Z'
+            return date_formatted
+        elif len(date) > 11 and len(date)<17:
+            split_date = date.split(self.date_delimiter)
+            split_year = split_date[2].split()
+            split_hour = split_year[1].split(self.hour_delimiter)
+            date_formatted = datetime(int(split_year[0]),int(split_date[1]),int(split_date[0]),int(split_hour[0]),int(split_hour[1])).strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3]+'Z'
+            return date_formatted
+        else:
+            split_date = date.split(self.date_delimiter)
+            split_year = split_date[2].split()
+            split_hour = split_year[1].split(self.hour_delimiter)
+            date_formatted = datetime(int(split_year[0]),int(split_date[1]),int(split_date[0]),int(split_hour[0]),int(split_hour[1]),int(split_hour[2])).strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3]+'Z'
+            return date_formatted
