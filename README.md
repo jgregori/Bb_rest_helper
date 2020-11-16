@@ -71,9 +71,9 @@ Once you have the right credentials in place and your application is registered 
     from Bb_rest_helper import Bb_Utils
     from Bb_rest_helper import Ally_Helper
     ```
-2. create an instance of the Get_config class to get configuration values from a JSON file: 
+2. create an instance of the Get_Config class to get configuration values from a JSON file: 
     ```
-    #create an instance of the Get_config class.
+    #create an instance of the Get_Config class.
     config=Get_Config('./collab_config.json')
 
     #Get configuration values
@@ -118,7 +118,7 @@ Once you have the right credentials in place and your application is registered 
     collab_token=collab_auth.collab_auth()
     
     #Learn
-    learn_auth=Auth_helper(learn_url,learn_key,learn_secret)
+    learn_auth=Auth_Helper(learn_url,learn_key,learn_secret)
     learn_token=learn_auth.learn_auth()
 
     #Ally
@@ -189,8 +189,51 @@ Once you have the right credentials in place and your application is registered 
                 },
             },
          }
-         
-6. **Ally Helper usage**
+
+6. **Bb_Utils class**         
+    
+    Bb_Utils is a class that contains utiliy methods that make our life easier when performing certain common operations with the Blackboard REST APIs such as logging, pretty printing, date formatting or id conversion. This class is somewhat experimental and will be growing over time as the need arises in new projects. Here is a brief explanation of the methods in this class:
+
+    The first step to use the methods is to create an isntance of the Bb_utils class:
+        `````
+        utils = Bb_Utils()
+        `````
+    **set_logging** This method has been coverd in detail in section 2 of this document.
+    **pretty_printer** Prints the response from any of the requests methods in a prettified format to the console.
+        `````
+        courses = reqs.Bb_GET(url_courses,learn_token,params) #Example call. 
+        utils.pretty_printer(courses)
+        `````
+        by default, the method will indent 4 spaces and sort the keys aphabetically, this can be modified by passing sort_keys = False as a second argument
+        `````
+        utils.pretty_printer(courses, sort_keys = False)
+        ````
+    **check_course_id** Checks if a given Learn course exists in the server by taking the external course id as an
+          argument and returs True or False. Please note that the accuracy of this method depends on the externalId being an specific value. It is discouraged to use short, commong strings such as 001 or aaa as those would likely return many different values.
+          ````
+          check_course = utils.(external_course_id) #Returns True or False.
+          `````
+    **time_format**  This method is provided to facilitate date formatting when importing dates from 
+        other applications, i.e, dates in excel format, it can take a date string with the following formats
+            DD/MM/YYYY
+            DD/MM/YYYY HH:MM
+            DD/MM/YYYY HH:MM:SS
+        optional arguments for date delimiter (default "/") and hour delimiter (default ":")
+        can be provided. The outcome of the method is YYYY-MM-DDTHH:MM:SS:000Z
+        `````
+        formatted_date = utils.time_format(DD/MM/YYYY)
+        ````` 
+    **learn_convert_external_id**  This method is used to get the external id of a learn course as an argument
+         and return another field in the get response (usually the course id). We found it is a common operation, particularly when getting a list of courses in a CSV.
+         `````
+         converted_id = utils.learn_convert_external_id(learn_url, learn_token,'007687') #Returns the courseId (default)
+         ```````
+        if interested in converting the externalId to another value that can be found in the get response for courses, pass that field name as the last argument for the method
+         `````
+         converted_id = utils.learn_convert_external_id(learn_url, learn_token,'007687','DataSourceId') #Returns the dataSourceId instead of the id
+         ```````
+
+7. **Ally Helper usage**
 
     Get the athentication token as described in section 3
     ```

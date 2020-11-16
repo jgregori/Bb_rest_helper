@@ -348,19 +348,21 @@ class Bb_Utils():
             logging.warning("No data to print.")
 
     # Checks if a given Learn course exists in the server
-    def check_course_id(self, course_id):
+    def check_course_id(self, token, external_course_id):
+        self.token = token
+        self.external_course_id = external_course_id
         try:
-            self.endpoint_courses = "/learn/api/public/v3/courses"
-            self.headers = {
+            endpoint_courses = "/learn/api/public/v3/courses"
+            headers = {
                 'Authorization': f'Bearer {self.token}',
                 'Content-Type': "Application/json"
             }
-            self.params = {
-                "externalId": course_id,
+            params = {
+                "externalId": self.external_course_id,
                 "fields": "id"
             }
             r = requests.request(
-                'GET', self.url+self.endpoint_courses, headers=self.headers, params=self.params)
+                'GET', f'{self.url}{endpoint_courses}', headers= headers, params= params)
             r.raise_for_status()
             data = json.loads(r.text)
             if data["results"]:
@@ -402,3 +404,36 @@ class Bb_Utils():
             split_hour = split_year[1].split(self.hour_delimiter)
             date_formatted = datetime(int(split_year[0]),int(split_date[1]),int(split_date[0]),int(split_hour[0]),int(split_hour[1]),int(split_hour[2])).strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3]+'Z'
             return date_formatted
+    
+    #This method is used to get the external id of a learn course as an argument and return
+    # another field in the get response (usually the course id). We found it is a common operation, 
+    # particularly when getting a list of
+    # courses in a CSV 
+    def learn_convert_external_id(self, url, token, external_id,final_id="id"):
+        self.url = url
+        self.token = token
+        self.external_id = external_id
+        self.final_id = final_id
+        self.url_courses = f'{self.url}/learn/api/public/v3/courses'
+        headers = {
+                'Authorization': f'Bearer {self.token}',
+                'Content-Type': "Application/json"
+            }
+        params={
+            "externalId":self.external_id,
+            "fields":self.final_id
+        }
+        try:
+            r = requests.request(
+                'GET', self.url_courses, headers = headers, params = params)
+            r.raise_for_status()
+            data = json.loads(r.text)
+            if len(data) == 1:
+                logging.info("course externalId converted to course Id")
+                return data["results"][0][self.final_id]
+            else:
+                logging.warning("several results have been found, please use a more specific Id")
+        except requests.exceptions.HTTPError as e:
+            data = json.loads(r.text)
+            logging.error(data["message"])
+    
