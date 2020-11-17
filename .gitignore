@@ -3,6 +3,7 @@ config.json
 learn_config.json
 collab_config.json
 ally_config.json
+logs
 
 # Editors
 .vscode/
