@@ -5,7 +5,7 @@ This library is intended to explore Blackboard REST APIs and to help create POCs
 
 # DESCRIPTION.
 
-The Bb Rest Helper includes 5 classes to simpilfy common API operations with Blackboard APIs.
+The Bb Rest Helper includes 5 classes to simpilfy common API operations with Blackboard APIs;
 
 1. **Get_Config.** This class is used to get configuration variables (url,key,secret)from an external configuration file in Json format. If you are authenticating for more than one API (i.e. Learn and Collaborate) you will need separate configuration files (i.e. learn_config.json and collab_config.json).
 2. **Auth_Helper.** This class is used to get the token that then will be used in the API calls. Provides different methods for the different APIs.
@@ -27,7 +27,7 @@ The first step is to get the right credentials for the API that you will be usin
 
 1. **Use REST API credentials or LTI integration credentials.** REST credentials are standalone (not connected to your institution´s login group) and can be
    obtained by writing to developers@blackboard.com. LTI credentials are the same that you would use to configure Collaborate in your LMS, and can be obtained
-   from Blackboard support. Any changes in your production system as a result of API testing is at your sole responsability.
+   from Blackboard support. Any changes in your production system as a result of API testing are at your sole responsability.
 2. **Fill the configuration template (config.json).** you may want to rename to "collab_config.json" to keep track of the changes.
 
 ## For ALLY as a service:
@@ -44,11 +44,11 @@ Once you have the right credentials in place and your application is registered 
    project you are working on, this is really helpful to avoid issues with libraries and dependencies across projects. You can create a virtual environment by
    installing the virtualenv python library
     
-         Pip3 install virtualenv
+         pip3 install virtualenv
     
     then you create a virtual environment by navigating to the desired folder for your application and using the command:
     
-         Python3 -m venv env 
+         python3 -m venv env 
     
     you can activate this virtual environment by using the command:
          
