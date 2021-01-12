@@ -315,9 +315,10 @@ class Bb_Requests():
             #fulfilled the request but that there is no content to return.
             r.raise_for_status()
             logging.info("DELETE Request completed")
+            if r.status_code == 200:
+                logging.info('Resource deleted')
         except requests.exceptions.HTTPError as e:
-            data = json.loads(r.text)
-            logging.error(data["message"])
+            logging.error('The resource could not be deleted')
 
 #A set of convenience functions (logging, printing, checking courses...), this will be extended over time.   
 class Bb_Utils():
