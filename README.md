@@ -20,7 +20,7 @@ The Bb Rest Helper includes 5 classes to simpilfy common API operations with Bla
 
 ### SETUP. Make sure you are at least in Python 3.7+
 
-The first step is to get the right credentials for the API that you will be using. Depending on the API, the process may be a bit different, we offer a summary, but please check docs.blackboard.com for the full picture.
+The first step is to get the right credentials for the API that you will be using. Depending on the API, the process may be a bit different. We offer a summary, but please check docs.blackboard.com for the full picture.
 
 #### For Blackboard Learn
 
