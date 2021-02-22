@@ -44,7 +44,7 @@ Once you have the right credentials in place and your application is registered 
    project you are working on, this is really helpful to avoid issues with libraries and dependencies across projects. You can create a virtual environment by
    installing the virtualenv python library
     
-         pip3 install virtualenv
+         python3 -m pip3 install --user virtualenv
     
     then you create a virtual environment by navigating to the desired folder for your application and using the command:
     
