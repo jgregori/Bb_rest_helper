@@ -101,6 +101,17 @@ To fix this you could try to:
 1. loosen the range of package versions you've specified
 2. remove package versions to allow pip attempt to solve the dependency conflict
 
+```python
+# from
+cryptography=3.3.32
+
+#to
+cryptography
+
+```
+
+*Note* that the `=3.3.2` was removed from the line in the `requirements.txt` file.
+
 Once you are done, you can just deactivate the virtual environment by using:
 
 ```shell
