@@ -124,6 +124,8 @@ deactivate
 pip3 install Bb-rest-helper
 ```
 
+*Note*: For conveinence, this was already added to the requirements.txt file.
+
 &nbsp;
 
 # USAGE.
