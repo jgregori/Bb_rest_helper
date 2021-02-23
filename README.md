@@ -85,7 +85,7 @@ pip3 install -r ./requirements.txt
 ```
 
 
-You may recieve conflit errors when you have already have some depandcies installed:
+You may recieve conflit errors when if you already have some dependencies installed:
 
 ```shell
 
