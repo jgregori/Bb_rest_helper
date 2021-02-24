@@ -24,7 +24,7 @@ class Get_Config():
 
     #Initializes the class by taking the configuration file path
     #as an argument, a typical value would be "./config.json".
-    def __init__(self, file_path):
+    def __init__(self, file_path:str):
         self.file_path = file_path
         try:
             with open(self.file_path) as conf:
@@ -232,7 +232,7 @@ class Bb_Requests():
 
     #POST request. It takes a POST endpoint from the API, the authentication token,
     #a list of parameters, and a json payload as arguments.
-    def Bb_POST(self, endpoint, token, params = {}, payload):
+    def Bb_POST(self, endpoint, token, payload,params = {}):
         self.endpoint = endpoint
         self.token = token
         self.params = params
@@ -255,7 +255,7 @@ class Bb_Requests():
     #PATCH request. It takes a PATCH endpoint from the API, the authentication token,
     #a list of parameters, and a json payload as arguments. A PATCH requests allows
     #to update a record partially.
-    def Bb_PATCH(self, endpoint, token, params = {}, payload):
+    def Bb_PATCH(self, endpoint, token, payload, params = {},):
         self.endpoint = endpoint
         self.token = token
         self.params = params
@@ -278,7 +278,7 @@ class Bb_Requests():
     #PUT request. It takes a PUT endpoint from the API, the authentication token, 
     #a list of parameters, and a json payload as arguments. A PUT request is meant
     #to update a record entirely.
-    def Bb_PUT(self, endpoint, token, params = {}, payload):
+    def Bb_PUT(self, endpoint, token, payload, params = {}):
         self.endpoint = endpoint
         self.token = token
         self.params = params
@@ -436,3 +436,23 @@ class Bb_Utils():
             data = json.loads(r.text)
             logging.error(data["message"])
     
+    # A convenience method that further abstracts the setup and authentication process to return the token in
+    # just one line. This method is just for Learn and collaborate
+    def get_token(self, filepath:str, platform:str):
+        self.filepath = filepath
+        self.platform = platform
+        self.conf = Get_Config(self.filepath)
+        self.url = self.conf.get_url()
+        self.key = self.conf.get_key()
+        self.secret = self.conf.get_secret()
+        self.auth = Auth_Helper(self.url,self.key,self.secret)
+        if self.platform == "Learn":
+            self.token = self.auth.learn_auth()
+            return self.token
+        elif self.platform == "Collaborate":
+            self.token = self.auth.collab_auth()
+            return self.token
+        else:
+            logging.error('Please specify a platform, valid values are Learn and Collaborate')
+
+        
