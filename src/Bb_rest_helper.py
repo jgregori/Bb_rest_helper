@@ -266,6 +266,7 @@ class Bb_Requests():
             data = json.loads(r.text)
             logging.error(data["message"])
 
+
     # POST request. It takes a POST endpoint from the API, the authentication token,
     # a list of parameters, and a json payload as arguments.
     def Bb_POST(
@@ -296,6 +297,7 @@ class Bb_Requests():
         except requests.exceptions.HTTPError as e:
             data = json.loads(r.text)
             logging.error(data["message"])
+
 
     # PATCH request. It takes a PATCH endpoint from the API, the authentication token,
     # a list of parameters, and a json payload as arguments. A PATCH requests allows
@@ -328,6 +330,7 @@ class Bb_Requests():
         except requests.exceptions.HTTPError as e:
             data = json.loads(r.text)
             logging.error(data["message"])
+
 
     # PUT request. It takes a PUT endpoint from the API, the authentication token,
     # a list of parameters, and a json payload as arguments. A PUT request is meant
@@ -527,3 +530,25 @@ class Bb_Utils():
         except requests.exceptions.HTTPError as e:
             data = json.loads(r.text)
             logging.error(data["message"])
+
+    
+    # A convenience method that further abstracts the setup and authentication process to return the token in
+    # just one line. This method is just for Learn and collaborate
+    def get_token(self, filepath:str, platform:str):
+        self.filepath = filepath
+        self.platform = platform
+        self.conf = Get_Config(self.filepath)
+        self.url = self.conf.get_url()
+        self.key = self.conf.get_key()
+        self.secret = self.conf.get_secret()
+        self.auth = Auth_Helper(self.url,self.key,self.secret)
+        if self.platform == "Learn":
+            self.token = self.auth.learn_auth()
+            return self.token
+        elif self.platform == "Collaborate":
+            self.token = self.auth.collab_auth()
+            return self.token
+        else:
+            logging.error('Please specify a platform, valid values are Learn and Collaborate')
+
+        
