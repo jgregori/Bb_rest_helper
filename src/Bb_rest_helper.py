@@ -211,7 +211,7 @@ class Bb_Requests():
 
     #GET request. It takes a GET endpoint from the API, the authentication
     #token and a list of parameters as arguments.
-    def Bb_GET(self, endpoint, token, params):
+    def Bb_GET(self, endpoint, token, params = {}):
         self.endpoint = endpoint
         self.token = token
         self.params = params
@@ -232,7 +232,7 @@ class Bb_Requests():
 
     #POST request. It takes a POST endpoint from the API, the authentication token,
     #a list of parameters, and a json payload as arguments.
-    def Bb_POST(self, endpoint, token, params, payload):
+    def Bb_POST(self, endpoint, token, params = {}, payload):
         self.endpoint = endpoint
         self.token = token
         self.params = params
@@ -255,7 +255,7 @@ class Bb_Requests():
     #PATCH request. It takes a PATCH endpoint from the API, the authentication token,
     #a list of parameters, and a json payload as arguments. A PATCH requests allows
     #to update a record partially.
-    def Bb_PATCH(self, endpoint, token, params, payload):
+    def Bb_PATCH(self, endpoint, token, params = {}, payload):
         self.endpoint = endpoint
         self.token = token
         self.params = params
@@ -278,7 +278,7 @@ class Bb_Requests():
     #PUT request. It takes a PUT endpoint from the API, the authentication token, 
     #a list of parameters, and a json payload as arguments. A PUT request is meant
     #to update a record entirely.
-    def Bb_PUT(self, endpoint, token, params, payload):
+    def Bb_PUT(self, endpoint, token, params = {}, payload):
         self.endpoint = endpoint
         self.token = token
         self.params = params
@@ -300,7 +300,7 @@ class Bb_Requests():
 
     #DELETE request. It takes a DELETE endpoint from the API, the authentication token
     #and a list of parameters as arguments.
-    def Bb_DELETE(self, endpoint, token, params):
+    def Bb_DELETE(self, endpoint, token, params = {}):
         self.endpoint = endpoint
         self.token = token
         self.params = params
