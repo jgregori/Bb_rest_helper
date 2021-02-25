@@ -298,6 +298,34 @@ class Bb_Requests():
             data = json.loads(r.text)
             logging.error(data["message"])
 
+    # Uploads a file to the Blacboard Learn Api uploads endpoint, getting the path to the file and the auth header
+    # arguments, it returns the 
+    def Bb_POST_file(self, url:str, token: str, file_path: str):
+        self.url = url
+        self.file_path = file_path
+        self.token = token
+        self.headers = {
+            "Authorization": f'Bearer {self.token}'
+        }
+        self.uploads_url = f'{self.url}/learn/api/public/v1/uploads'
+        self.files = {
+            'file': open(file_path, 'rb')
+        }
+        try:
+            r = requests.request(
+                'POST',
+                self.uploads_url,
+                files=self.files,
+                headers=self.headers)
+            r.raise_for_status()
+            data = json.loads(r.text)
+            logging.info(
+                'File uploaded to temporary storage, returning id')
+            return data['id']
+        except requests.exceptions.HTTPError as e:
+            data = json.loads(r.text)
+            logging.error(data["message"])
+
 
     # PATCH request. It takes a PATCH endpoint from the API, the authentication token,
     # a list of parameters, and a json payload as arguments. A PATCH requests allows
