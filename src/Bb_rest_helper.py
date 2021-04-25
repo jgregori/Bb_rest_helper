@@ -247,7 +247,7 @@ class Bb_Requests():
 
     # GET request. It takes a GET endpoint from the API, the authentication
     # token and a list of parameters as arguments.
-    def Bb_GET(self, endpoint: str, token: str, params: dict = {}):
+    def Bb_GET(self, endpoint: str, token: str, params: dict = {}, pages: bool = True):
         self.endpoint = endpoint
         self.token = token
         self.params = params
@@ -258,6 +258,7 @@ class Bb_Requests():
         try:
             r = requests.request('GET', self.endpoint,
                                  headers=self.headers, params=self.params)
+            
             data = json.loads(r.text)
             r.raise_for_status()
             logging.info("GET Request completed")
@@ -299,7 +300,7 @@ class Bb_Requests():
             logging.error(data["message"])
 
     # Uploads a file to the Blacboard Learn Api uploads endpoint, getting the path to the file and the auth header
-    # arguments, it returns the 
+    # arguments, it returns the file id that will be used in other calls to the API (i.e. Creating content)
     def Bb_POST_file(self, url:str, token: str, file_path: str):
         self.url = url
         self.file_path = file_path
@@ -561,7 +562,7 @@ class Bb_Utils():
 
     
     # A convenience method that further abstracts the setup and authentication process to return the token in
-    # just one line. This method is just for Learn and collaborate
+    # just one line. This method is just for Learn and collaborate.
     def get_token(self, filepath:str, platform:str):
         self.filepath = filepath
         self.platform = platform

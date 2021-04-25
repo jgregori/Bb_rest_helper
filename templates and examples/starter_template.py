@@ -41,6 +41,13 @@ learn_token = learn_auth.learn_auth()
 collab_auth = Auth_Helper(collab_url, collab_key, collab_secret)
 collab_token = collab_auth.collab_auth()
 
+#Alternatively you can just get the Collaborate or Learn token using
+#the get_token method. Note this is NOT valid for ALLY.
+
+utils = Bb_Utils()
+learn_token = utils.get_token('./learn_config.json','Learn')
+collab_token = utils.get_token('./collab_config.json','Collaborate')
+
 #Authenticate and get the token (Ally).
 ally_auth = Ally_Helper(ally_url, ally_clientId, ally_key, ally_secret)
 ally_auth = ally_auth.ally_auth()
