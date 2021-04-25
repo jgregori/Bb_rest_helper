@@ -85,7 +85,8 @@ You may recieve conflit errors when if you already have some dependencies instal
 
 ```shell
 
-ERROR: Cannot install -r ./requirements.txt (line 9) and cryptography==3.3.2 because these package versions have conflicting dependencies.
+ERROR: Cannot install -r ./requirements.txt (line 9) and cryptography==3.3.2 
+because these package versions have conflicting dependencies.
 
 The conflict is caused by:
 The user requested cryptography==3.3.2
@@ -106,8 +107,6 @@ cryptography=3.3.32
 cryptography
 
 ```
-
-*Note* that the `=3.3.2` was removed from the line in the `requirements.txt` file.
 
 Once you are done working on your project, you can just deactivate the virtual environment by using:
 
@@ -144,6 +143,13 @@ Create an instance of the Get_Config class to get configuration values from a JS
 
 #create an instance of the Get_Config class.
 config=Get_Config('./collab_config.json')
+
+#the json file will have the following structure:
+     {
+    "url":" Your server URL",
+    "key":" Your Key",
+    "secret":" Your secret"
+     }
 
 #Get configuration values
 url=config.get_url()
@@ -207,6 +213,13 @@ collab_token=collab_auth.collab_auth()
 #Learn
 learn_auth=Auth_Helper(learn_url,learn_key,learn_secret)
 learn_token=learn_auth.learn_auth()
+
+#Alternatively you can just get the Collaborate or Learn token using
+#the get_token method. Note this is NOT valid for ALLY.
+
+utils = Bb_Utils()
+learn_token = utils.get_token('./learn_config.json','Learn')
+collab_token = utils.get_token('./collab_config.json','Collaborate')
 
 #Ally
 #Note ally is part of a separate class, and different methods apply
