@@ -4,6 +4,7 @@ learn_config.json
 collab_config.json
 ally_config.json
 logs
+local_tests
 test.py
 credentials
 
