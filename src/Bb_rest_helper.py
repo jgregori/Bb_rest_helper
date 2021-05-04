@@ -561,9 +561,10 @@ class Bb_Utils():
             logging.error(data["message"])
 
     
-    # A convenience method that further abstracts the setup and authentication process to return the token in
-    # just one line. This method is just for Learn and collaborate.
-    def get_token(self, filepath:str, platform:str):
+# A convenience method that further abstracts the setup and authentication process to return the token and the url in
+# just one line. This method is just for Learn and collaborate. The url has been added to avoid having to hardcode
+# this value or having to call Get_Config separately.
+    def quick_auth(self, filepath:str, platform:str):
         self.filepath = filepath
         self.platform = platform
         self.conf = Get_Config(self.filepath)
@@ -573,11 +574,18 @@ class Bb_Utils():
         self.auth = Auth_Helper(self.url,self.key,self.secret)
         if self.platform == "Learn":
             self.token = self.auth.learn_auth()
-            return self.token
+            data = {
+                'token':self.token,
+                'url':self.url
+            }
+            return data
         elif self.platform == "Collaborate":
             self.token = self.auth.collab_auth()
-            return self.token
+            data = {
+                'token':self.token,
+                'url':self.url
+            }
+            return data
         else:
-            logging.error('Please specify a platform, valid values are Learn and Collaborate')
-
+            logging.error('Please specify a platform, valid values are Learn and Collaborate.')
         
