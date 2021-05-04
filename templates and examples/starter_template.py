@@ -9,7 +9,7 @@ from Bb_rest_helper import Bb_Requests
 
 from Bb_rest_helper import Ally_Helper
 
-#logging.
+#logging and utils initialization.
 utils = Bb_Utils()
 utils.set_logging()
 
@@ -42,11 +42,21 @@ collab_auth = Auth_Helper(collab_url, collab_key, collab_secret)
 collab_token = collab_auth.collab_auth()
 
 #Alternatively you can just get the Collaborate or Learn token using
-#the get_token method. Note this is NOT valid for ALLY.
+#the quick_auth one liner method included in Bb_Utils. 
+#This method calls Get_Config for you.Note this is NOT valid for ALLY.
 
 utils = Bb_Utils()
-learn_token = utils.get_token('./learn_config.json','Learn')
-collab_token = utils.get_token('./collab_config.json','Collaborate')
+quick_auth_learn = utils.quick_auth('./learn_config.json','Learn')
+quick_auth_collab= utils.quick_auth('./collab_config.json','Collaborate')
+
+#With this method you have access to the token and the url for each platform
+#So it will not be neccesary to hardcode the url or call Get_Config separately
+
+learn_token = quick_auth_learn['token']
+collab_token = quick_auth_collab['token']
+
+learn_url = quick_auth_learn['url']
+collab_url = quick_auth_collab['url']
 
 #Authenticate and get the token (Ally).
 ally_auth = Ally_Helper(ally_url, ally_clientId, ally_key, ally_secret)
