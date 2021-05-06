@@ -241,45 +241,66 @@ class Ally_Helper():
 # Bb_Requests
 # A class to simplify API calls to Blackboard REST APIs, provides functions
 # for GET, POST, PUT, PATCH and DELETE
-
-
 class Bb_Requests():
 
     # GET request. It takes a GET endpoint from the API, the authentication
-    # token and a list of parameters as arguments.
-    def Bb_GET(self, endpoint: str, token: str, params: dict = {}, pages: bool = True):
+    # token and a list of parameters as arguments. This request has been updated
+    # to support pagination
+    def Bb_GET(self, base_url: str, endpoint: str, token: str, params: dict = {}):
+        self.base_url = base_url
         self.endpoint = endpoint
         self.token = token
         self.params = params
+        self.request_url = f'{self.base_url}{self.endpoint}'
         self.headers = {
             'Authorization': f'Bearer {self.token}',
             'Content-Type': "Application/json"
         }
+        data_from_pages = []
         try:
-            r = requests.request('GET', self.endpoint,
+            
+            r = requests.request('GET', self.request_url,
                                  headers=self.headers, params=self.params)
             
             data = json.loads(r.text)
             r.raise_for_status()
-            logging.info("GET Request completed")
-            return data
+            
+            for d in data['results']:
+                data_from_pages.append(d)
+
+            while data['paging']['nextPage']:
+                self.offset_url = f'{self.base_url}{data["paging"]["nextPage"]}'
+                r = requests.get(self.offset_url,headers={f'Authorization':f'Bearer {self.token}'})
+                data = json.loads(r.text)
+                for d in data['results']:
+                    data_from_pages.append(d)
+
         except requests.exceptions.HTTPError as e:
             data = json.loads(r.text)
             logging.error(data["message"])
+        
+        except:
+            logging.info("GET Request completed")
+            return data_from_pages
+        finally: 
+            return data_from_pages
 
 
     # POST request. It takes a POST endpoint from the API, the authentication token,
     # a list of parameters, and a json payload as arguments.
     def Bb_POST(
             self,
+            base_url: str,
             endpoint: str,
             token: str,
             payload: dict,
             params: dict = {}):
+        self.base_url = base_url
         self.endpoint = endpoint
         self.token = token
         self.params = params
         self.payload = payload
+        self.request_url = f'{self.base_url}{self.endpoint}'
         self.headers = {
             'Authorization': f'Bearer {self.token}',
             'Content-Type': "Application/json"
@@ -287,7 +308,7 @@ class Bb_Requests():
         try:
             r = requests.request(
                 'POST',
-                self.endpoint,
+                self.request_url,
                 headers=self.headers,
                 params=self.params,
                 json=self.payload)
@@ -301,14 +322,14 @@ class Bb_Requests():
 
     # Uploads a file to the Blacboard Learn Api uploads endpoint, getting the path to the file and the auth header
     # arguments, it returns the file id that will be used in other calls to the API (i.e. Creating content)
-    def Bb_POST_file(self, url:str, token: str, file_path: str):
-        self.url = url
+    def Bb_POST_file(self, base_url: str, token: str, file_path: str):
+        self.base_url = base_url
         self.file_path = file_path
         self.token = token
         self.headers = {
             "Authorization": f'Bearer {self.token}'
         }
-        self.uploads_url = f'{self.url}/learn/api/public/v1/uploads'
+        self.uploads_url = f'{self.base_url}/learn/api/public/v1/uploads'
         self.files = {
             'file': open(file_path, 'rb')
         }
@@ -333,6 +354,7 @@ class Bb_Requests():
     # to update a record partially.
     def Bb_PATCH(
             self,
+            base_url: str,
             endpoint: str,
             token: str,
             payload: dict,
@@ -341,6 +363,7 @@ class Bb_Requests():
         self.token = token
         self.params = params
         self.payload = payload
+        self.request_url = f'{self.base_url}{self.endpoint}'
         self.headers = {
             'Authorization': f'Bearer {self.token}',
             'Content-Type': "Application/json"
@@ -348,7 +371,7 @@ class Bb_Requests():
         try:
             r = requests.request(
                 'PATCH',
-                self.endpoint,
+                self.request_url,
                 headers=self.headers,
                 params=self.params,
                 json=self.payload)
@@ -366,14 +389,17 @@ class Bb_Requests():
     # to update a record entirely.
     def Bb_PUT(
             self,
+            base_url: str,
             endpoint: str,
             token: str,
             payload: dict,
             params: dict = {}):
+        self.base_url = base_url
         self.endpoint = endpoint
         self.token = token
         self.params = params
         self.payload = payload
+        self.request_url = f'{self.base_url}{self.endpoint}'
         self.headers = {
             'Authorization': f'Bearer {self.token}',
             'Content-Type': "Application/json"
@@ -381,7 +407,7 @@ class Bb_Requests():
         try:
             r = requests.request(
                 'PUT',
-                self.endpoint,
+                self.request_url,
                 headers=self.headers,
                 params=self.params,
                 json=self.payload)
@@ -395,10 +421,12 @@ class Bb_Requests():
 
     # DELETE request. It takes a DELETE endpoint from the API, the authentication token
     # and a list of parameters as arguments.
-    def Bb_DELETE(self, endpoint: str, token: str, params: dict = {}):
+    def Bb_DELETE(self, base_url: str, endpoint: str, token: str, params: dict = {}):
+        self.base_url = base_url
         self.endpoint = endpoint
         self.token = token
         self.params = params
+        self.request_url = f'{self.base_url}{self.endpoint}'
         self.headers = {
             'Authorization': f'Bearer {self.token}',
             'Content-Type': "Application/json"
@@ -406,7 +434,7 @@ class Bb_Requests():
         try:
             r = requests.request(
                 'DELETE',
-                self.endpoint,
+                self.request_url,
                 headers=self.headers,
                 params=self.params)
             # A successful DELETE request returns a 204 code meaning that the server has
@@ -418,8 +446,6 @@ class Bb_Requests():
 
 # A set of convenience functions (logging, printing, checking courses...),
 # this will be extended over time.
-
-
 class Bb_Utils():
 
     # Sets logging with default path to ./logs and default level of DEBUG.
