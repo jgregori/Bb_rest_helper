@@ -4,6 +4,48 @@ This library is intended to explore Blackboard REST APIs and to help create POCs
 
 &nbsp;
 
+### Changes to the last version (V2)
+
+The library continues to evolve with refinements and new use cases. As a personal project, the Bb Rest Helper did not came with much documentation about changes and versions, however, it is also true that changes util this version have been mostly compatible with previous versions (incremental enhancements and fixes) and the history can be checked in the [Github repository](https://github.com/JgregoriBb/Bb_rest_helper)
+
+This version, however, brings some breaking changes, so make sure to review this information before updating;
+
+1. **GET requests support for api pagination** for the sake of simplicity, GET requests for the learn API via the Bb_GET method will now return results from **ALL** pages, while this makes the method heavier to run, it is possible to control the amount of results via parameters (either using query parameters to filter results or directly using the limit). Collaborate GET requests will continue to work as before.
+
+2. **Changes to url/endpoints** until now, some manipulation was required to pass the full endpoint to the Bb_Request calls. In this version, a decision was made to split the base_url and endpoint as separate arguments for the methods. While this involves some refactoring for stuff created with previous versions, it enhances the overall workflows and allowed to build better support for other features such as pagination.
+
+```python
+#V.1.X.X
+req = Bb_Requests()
+base_url = 'your server url'
+endpoint = 'API endpoint'
+request_url = f'{base_url}{endpoint}'
+request = req.Bb_GET(request_url, token, params)
+
+#V.2.X.X
+req = Bb_Requests()
+base_url = 'your server url'
+endpoint = 'api endpoint'
+request = req.Bb_GET(base_url,endpoint,token, params)
+
+```
+3. **Quick authentication method for Learn and Collaborate** has been included in the Bb_Utils class, it uses the Get_Config and Auth_Helper classes under the hood to provide a convenient one liner that returns the token and the base_url.
+
+```python
+utils = Bb_Utils()
+quick_auth_learn = utils.quick_auth('./learn_config.json','Learn')
+quick_auth_collab= utils.quick_auth('./collab_config.json','Collaborate')
+
+#With this method you have access to the token and the url for each platform
+#So it will not be neccesary to hardcode the url or call Get_Config separately
+
+learn_token = quick_auth_learn['token']
+collab_token = quick_auth_collab['token']
+
+learn_url = quick_auth_learn['url']
+collab_url = quick_auth_collab['url']
+```
+
 ### DESCRIPTION
 
 The Bb Rest Helper includes 5 classes to simpilfy common API operations with Blackboard APIs;
@@ -245,18 +287,20 @@ ally_token = ally_auth.ally_auth()
 ```
 
 ## Example GET call:
-Create variables for the API endpoint url and the request parameters. The whole endpoint url (i.e https//myserver.blackboard.com/learn/api/public/v3/courses) needs to be provided.
+Create variables for the base_url (your server url or collaborate CSA url) API endpoint url, and the request parameters. Note that in V2 you no longer need to pass an F String with the whole request url (base_url + endpoint)
 
 ```python
 
 #Learn GET Courses endpoint and params example
-courses_endpoint=f'{learn_url}/learn/api/public/v3/courses"
+base_url = 'your server url'
+courses_endpoint='/learn/api/public/v3/courses'
 params = {
      'limit':'10',
      'fields':'courseId,name,description,ultraStatus'
 }
 
 #Collaborate GET Sessions endpoint and params example
+base_url = 'your collaborate CSA url'
 session_endpoint=f'{url}/sessions'
 params={
      "limit":"10"
@@ -267,17 +311,17 @@ params={
 If you do not wish to use parameters, just dont pass anthing as params. The library has bee updated to have an empty dictionary as a default, so you no longer need to pass {}
 
 
-Create an instance of Bb_Requests, then call the Bb_GET method pasing the endpoint, token and parameters as arguments.
+The next step is to create an instance of Bb_Requests, then call the Bb_GET method pasing the endpoint, token and parameters as arguments.
 
 ```python
 #Create an instance of the Bb_Requests class
 reqs=Bb_Requests()
 
 #Learn GET example
-learn_data=reqs.Bb_GET(courses_endpoint,learn_token,params)
+learn_data=reqs.Bb_GET(base_url,courses_endpoint,learn_token,params)
 
 #Collab GET example
-collab_data=reqs.Bb_GET(session_endpoint,collab_token,params)
+collab_data=reqs.Bb_GET(base_url,session_endpoint,collab_token,params)
 
 ```
 
@@ -428,6 +472,7 @@ converted_id = utils.learn_convert_external_id(
 )
 
 ```
+**quick_auth** This method has been covered in the USAGE section of this document.
 
 ## Ally Helper usage
 
