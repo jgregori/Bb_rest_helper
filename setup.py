@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="Bb_rest_helper", 
-    version="1.1.3",
+    version="2.0.0",
     author="Javier Gregori",
     author_email="javier.gregori@blackboard.com",
     description="A Python 3 library to simplify working with Blackboard APIs.",
