@@ -4,6 +4,22 @@ This library is intended to explore Blackboard REST APIs and to help create POCs
 
 &nbsp;
 
+### DESCRIPTION
+
+The Bb Rest Helper includes 5 classes to simpilfy common API operations with Blackboard APIs;
+
+1. **Get_Config.** This class is used to get configuration variables (url,key,secret)from an external configuration file in Json format. If you are authenticating for more than one API (i.e. Learn and Collaborate) you will need separate configuration files (i.e. learn_config.json and collab_config.json).
+
+2. **Auth_Helper.** This class is used to get the token that then will be used in the API calls. Provides different methods for the different APIs.
+
+3. **Bb_Requests.** This class is used to simplify calls to the Blackboard Rest APIs. Provides methods for GET, POST, PUT, PATCH and DELETE requests.
+
+4. **Bb_Utils.** A set of convenience functions (Logging, printing...), this will be extended over time.
+
+5. **Ally_Helper** This class is used to simplify interaction with Ally as a service, includes methods to authenticate, upload a file, check processing status and retrieve the feedback. As it is an initial release for this API with limited features, it is implemented as a separate class to provide easier access to these methods rather than having to code them manually or with the Bb_rest_helper library.
+
+&nbsp;
+
 ### Changes to the last version (V2)
 
 The library continues to evolve with refinements and new use cases. As a personal project, the Bb Rest Helper did not came with much documentation about changes and versions, however, it is also true that changes util this version have been mostly compatible with previous versions (incremental enhancements and fixes) and the history can be checked in the [Github repository](https://github.com/JgregoriBb/Bb_rest_helper)
@@ -46,20 +62,7 @@ learn_url = quick_auth_learn['url']
 collab_url = quick_auth_collab['url']
 ```
 
-### DESCRIPTION
-
-The Bb Rest Helper includes 5 classes to simpilfy common API operations with Blackboard APIs;
-
-1. **Get_Config.** This class is used to get configuration variables (url,key,secret)from an external configuration file in Json format. If you are authenticating for more than one API (i.e. Learn and Collaborate) you will need separate configuration files (i.e. learn_config.json and collab_config.json).
-
-2. **Auth_Helper.** This class is used to get the token that then will be used in the API calls. Provides different methods for the different APIs.
-
-3. **Bb_Requests.** This class is used to simplify calls to the Blackboard Rest APIs. Provides methods for GET, POST, PUT, PATCH and DELETE requests.
-
-4. **Bb_Utils.** A set of convenience functions (Logging, printing...), this will be extended over time.
-
-5. **Ally_Helper** This class is used to simplify interaction with Ally as a service, includes methods to authenticate, upload a file, check processing status and retrieve the feedback. As it is an initial release for this API with limited features, it is implemented as a separate class to provide easier access to these methods rather than having to code them manually or with the Bb_rest_helper library.
-
+4. **Added rate limit information to logs on Bb_requests for Learn requests** When performing a request to the learn API using Bb_requests, rate limit information covering API Limit, Remaining API calls and time to reset the API limit is included in the logs. 
 &nbsp;
 
 ### SETUP. Make sure you are at least in Python 3.7+
