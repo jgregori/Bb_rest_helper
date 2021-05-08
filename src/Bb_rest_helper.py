@@ -21,6 +21,7 @@ from requests import HTTPError
 #   "secret":""
 # }
 
+
 class Get_Config():
 
     # Initializes the class by taking the configuration file path
@@ -241,12 +242,19 @@ class Ally_Helper():
 # Bb_Requests
 # A class to simplify API calls to Blackboard REST APIs, provides functions
 # for GET, POST, PUT, PATCH and DELETE
+
+
 class Bb_Requests():
 
     # GET request. It takes a GET endpoint from the API, the authentication
     # token and a list of parameters as arguments. This request has been updated
     # to support pagination
-    def Bb_GET(self, base_url: str, endpoint: str, token: str, params: dict = {}):
+    def Bb_GET(
+            self,
+            base_url: str,
+            endpoint: str,
+            token: str,
+            params: dict = {}):
         self.base_url = base_url
         self.endpoint = endpoint
         self.token = token
@@ -258,19 +266,21 @@ class Bb_Requests():
         }
         data_from_pages = []
         try:
-            
+
             r = requests.request('GET', self.request_url,
                                  headers=self.headers, params=self.params)
-            
+
             data = json.loads(r.text)
             r.raise_for_status()
-            
+
             for d in data['results']:
                 data_from_pages.append(d)
 
             while data['paging']['nextPage']:
                 self.offset_url = f'{self.base_url}{data["paging"]["nextPage"]}'
-                r = requests.get(self.offset_url,headers={f'Authorization':f'Bearer {self.token}'})
+                r = requests.get(
+                    self.offset_url, headers={
+                        f'Authorization': f'Bearer {self.token}'})
                 data = json.loads(r.text)
                 for d in data['results']:
                     data_from_pages.append(d)
@@ -278,21 +288,23 @@ class Bb_Requests():
         except requests.exceptions.HTTPError as e:
             data = json.loads(r.text)
             logging.error(data["message"])
-        
-        except:
-            #returns data from Learn REST API, all pages
+
+        except BaseException:
+            # returns data from Learn REST API, all pages
             logging.info("GET Request completed")
             logging.info(f'API limit: {r.headers["X-Rate-Limit-Limit"]}')
-            logging.info(f'Remaining API calls: {r.headers["X-Rate-Limit-Remaining"]}')
-            logging.info(f'Time to reset API limit: {r.headers["X-Rate-Limit-reset"]}')
+            logging.info(
+                f'Remaining API calls: {r.headers["X-Rate-Limit-Remaining"]}')
+            logging.info(
+                f'Time to reset API limit: {r.headers["X-Rate-Limit-reset"]}')
             return data_from_pages
-        finally: 
-            #returns data from Collabrate API, as there is no pagination
+        finally:
+            # returns data from Collabrate API, as there is no pagination
             return data_from_pages
-
 
     # POST request. It takes a POST endpoint from the API, the authentication token,
     # a list of parameters, and a json payload as arguments.
+
     def Bb_POST(
             self,
             base_url: str,
@@ -329,7 +341,8 @@ class Bb_Requests():
             logging.error(data["message"])
 
     # Uploads a file to the Blacboard Learn Api uploads endpoint, getting the path to the file and the auth header
-    # arguments, it returns the file id that will be used in other calls to the API (i.e. Creating content)
+    # arguments, it returns the file id that will be used in other calls to
+    # the API (i.e. Creating content)
     def Bb_POST_file(self, base_url: str, token: str, file_path: str):
         self.base_url = base_url
         self.file_path = file_path
@@ -353,17 +366,19 @@ class Bb_Requests():
                 'File uploaded to temporary storage, returning id')
             logging.info("GET Request completed")
             logging.info(f'API limit: {r.headers["X-Rate-Limit-Limit"]}')
-            logging.info(f'Remaining API calls: {r.headers["X-Rate-Limit-Remaining"]}')
-            logging.info(f'Time to reset API limit: {r.headers["X-Rate-Limit-reset"]}')
+            logging.info(
+                f'Remaining API calls: {r.headers["X-Rate-Limit-Remaining"]}')
+            logging.info(
+                f'Time to reset API limit: {r.headers["X-Rate-Limit-reset"]}')
             return data['id']
         except requests.exceptions.HTTPError as e:
             data = json.loads(r.text)
             logging.error(data["message"])
 
-
     # PATCH request. It takes a PATCH endpoint from the API, the authentication token,
     # a list of parameters, and a json payload as arguments. A PATCH requests allows
     # to update a record partially.
+
     def Bb_PATCH(
             self,
             base_url: str,
@@ -392,17 +407,19 @@ class Bb_Requests():
             r.raise_for_status()
             logging.info("PATCH Request completed")
             logging.info(f'API limit: {r.headers["X-Rate-Limit-Limit"]}')
-            logging.info(f'Remaining API calls: {r.headers["X-Rate-Limit-Remaining"]}')
-            logging.info(f'Time to reset API limit: {r.headers["X-Rate-Limit-reset"]}')
+            logging.info(
+                f'Remaining API calls: {r.headers["X-Rate-Limit-Remaining"]}')
+            logging.info(
+                f'Time to reset API limit: {r.headers["X-Rate-Limit-reset"]}')
             return data
         except requests.exceptions.HTTPError as e:
             data = json.loads(r.text)
             logging.error(data["message"])
 
-
     # PUT request. It takes a PUT endpoint from the API, the authentication token,
     # a list of parameters, and a json payload as arguments. A PUT request is meant
     # to update a record entirely.
+
     def Bb_PUT(
             self,
             base_url: str,
@@ -431,8 +448,10 @@ class Bb_Requests():
             r.raise_for_status()
             logging.info("PUT Request completed")
             logging.info(f'API limit: {r.headers["X-Rate-Limit-Limit"]}')
-            logging.info(f'Remaining API calls: {r.headers["X-Rate-Limit-Remaining"]}')
-            logging.info(f'Time to reset API limit: {r.headers["X-Rate-Limit-reset"]}')
+            logging.info(
+                f'Remaining API calls: {r.headers["X-Rate-Limit-Remaining"]}')
+            logging.info(
+                f'Time to reset API limit: {r.headers["X-Rate-Limit-reset"]}')
             return data
         except requests.exceptions.HTTPError as e:
             data = json.loads(r.text)
@@ -440,7 +459,12 @@ class Bb_Requests():
 
     # DELETE request. It takes a DELETE endpoint from the API, the authentication token
     # and a list of parameters as arguments.
-    def Bb_DELETE(self, base_url: str, endpoint: str, token: str, params: dict = {}):
+    def Bb_DELETE(
+            self,
+            base_url: str,
+            endpoint: str,
+            token: str,
+            params: dict = {}):
         self.base_url = base_url
         self.endpoint = endpoint
         self.token = token
@@ -461,13 +485,17 @@ class Bb_Requests():
             r.raise_for_status()
             logging.info("DELETE Request completed")
             logging.info(f'API limit: {r.headers["X-Rate-Limit-Limit"]}')
-            logging.info(f'Remaining API calls: {r.headers["X-Rate-Limit-Remaining"]}')
-            logging.info(f'Time to reset API limit: {r.headers["X-Rate-Limit-reset"]}')
+            logging.info(
+                f'Remaining API calls: {r.headers["X-Rate-Limit-Remaining"]}')
+            logging.info(
+                f'Time to reset API limit: {r.headers["X-Rate-Limit-reset"]}')
         except requests.exceptions.HTTPError as e:
             logging.error('The resource could not be deleted')
 
 # A set of convenience functions (logging, printing, checking courses...),
 # this will be extended over time.
+
+
 class Bb_Utils():
 
     # Sets logging with default path to ./logs and default level of DEBUG.
@@ -608,32 +636,34 @@ class Bb_Utils():
             data = json.loads(r.text)
             logging.error(data["message"])
 
-    
+
 # A convenience method that further abstracts the setup and authentication process to return the token and the url in
 # just one line. This method is just for Learn and collaborate. The url has been added to avoid having to hardcode
 # this value or having to call Get_Config separately.
-    def quick_auth(self, filepath:str, platform:str):
+
+
+    def quick_auth(self, filepath: str, platform: str):
         self.filepath = filepath
         self.platform = platform
         self.conf = Get_Config(self.filepath)
         self.url = self.conf.get_url()
         self.key = self.conf.get_key()
         self.secret = self.conf.get_secret()
-        self.auth = Auth_Helper(self.url,self.key,self.secret)
+        self.auth = Auth_Helper(self.url, self.key, self.secret)
         if self.platform == "Learn":
             self.token = self.auth.learn_auth()
             data = {
-                'token':self.token,
-                'url':self.url
+                'token': self.token,
+                'url': self.url
             }
             return data
         elif self.platform == "Collaborate":
             self.token = self.auth.collab_auth()
             data = {
-                'token':self.token,
-                'url':self.url
+                'token': self.token,
+                'url': self.url
             }
             return data
         else:
-            logging.error('Please specify a platform, valid values are Learn and Collaborate.')
-        
+            logging.error(
+                'Please specify a platform, valid values are Learn and Collaborate.')
