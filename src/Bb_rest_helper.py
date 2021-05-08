@@ -280,9 +280,14 @@ class Bb_Requests():
             logging.error(data["message"])
         
         except:
+            #returns data from Learn REST API, all pages
             logging.info("GET Request completed")
+            logging.info(f'API limit: {r.headers["X-Rate-Limit-Limit"]}')
+            logging.info(f'Remaining API calls: {r.headers["X-Rate-Limit-Remaining"]}')
+            logging.info(f'Time to reset API limit: {r.headers["X-Rate-Limit-reset"]}')
             return data_from_pages
         finally: 
+            #returns data from Collabrate API, as there is no pagination
             return data_from_pages
 
 
@@ -315,6 +320,9 @@ class Bb_Requests():
             data = json.loads(r.text)
             r.raise_for_status()
             logging.info("POST Request completed")
+            #logging.info(f'API limit: {r.headers["X-Rate-Limit-Limit"]}')
+            #logging.info(f'Remaining API calls: {r.headers["X-Rate-Limit-Remaining"]}')
+            #logging.info(f'Time to reset API limit: {r.headers["X-Rate-Limit-reset"]}')
             return data
         except requests.exceptions.HTTPError as e:
             data = json.loads(r.text)
@@ -343,6 +351,10 @@ class Bb_Requests():
             data = json.loads(r.text)
             logging.info(
                 'File uploaded to temporary storage, returning id')
+            logging.info("GET Request completed")
+            logging.info(f'API limit: {r.headers["X-Rate-Limit-Limit"]}')
+            logging.info(f'Remaining API calls: {r.headers["X-Rate-Limit-Remaining"]}')
+            logging.info(f'Time to reset API limit: {r.headers["X-Rate-Limit-reset"]}')
             return data['id']
         except requests.exceptions.HTTPError as e:
             data = json.loads(r.text)
@@ -359,6 +371,7 @@ class Bb_Requests():
             token: str,
             payload: dict,
             params: dict = {}):
+        self.base_url = base_url
         self.endpoint = endpoint
         self.token = token
         self.params = params
@@ -378,6 +391,9 @@ class Bb_Requests():
             data = json.loads(r.text)
             r.raise_for_status()
             logging.info("PATCH Request completed")
+            logging.info(f'API limit: {r.headers["X-Rate-Limit-Limit"]}')
+            logging.info(f'Remaining API calls: {r.headers["X-Rate-Limit-Remaining"]}')
+            logging.info(f'Time to reset API limit: {r.headers["X-Rate-Limit-reset"]}')
             return data
         except requests.exceptions.HTTPError as e:
             data = json.loads(r.text)
@@ -414,6 +430,9 @@ class Bb_Requests():
             data = json.loads(r.text)
             r.raise_for_status()
             logging.info("PUT Request completed")
+            logging.info(f'API limit: {r.headers["X-Rate-Limit-Limit"]}')
+            logging.info(f'Remaining API calls: {r.headers["X-Rate-Limit-Remaining"]}')
+            logging.info(f'Time to reset API limit: {r.headers["X-Rate-Limit-reset"]}')
             return data
         except requests.exceptions.HTTPError as e:
             data = json.loads(r.text)
@@ -441,6 +460,9 @@ class Bb_Requests():
             # fulfilled the request but that there is no content to return.
             r.raise_for_status()
             logging.info("DELETE Request completed")
+            logging.info(f'API limit: {r.headers["X-Rate-Limit-Limit"]}')
+            logging.info(f'Remaining API calls: {r.headers["X-Rate-Limit-Remaining"]}')
+            logging.info(f'Time to reset API limit: {r.headers["X-Rate-Limit-reset"]}')
         except requests.exceptions.HTTPError as e:
             logging.error('The resource could not be deleted')
 
