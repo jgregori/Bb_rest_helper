@@ -1,8 +1,6 @@
 # Bb_rest_helper
 
-This library is intended to explore Blackboard REST APIs and to help create POCs for integrations. **This tool is not intended to be used in production and no warranties of any kind are provided.**
-
-&nbsp;
+This library is intended to explore Blackboard REST APIs and to help create POCs for integrations. **Please note this tool is not supported by Blackboard and no warranties of any kind are provided.**
 
 ### DESCRIPTION
 
@@ -18,9 +16,7 @@ The Bb Rest Helper includes 5 classes to simpilfy common API operations with Bla
 
 5. **Ally_Helper** This class is used to simplify interaction with Ally as a service, includes methods to authenticate, upload a file, check processing status and retrieve the feedback. As it is an initial release for this API with limited features, it is implemented as a separate class to provide easier access to these methods rather than having to code them manually or with the Bb_rest_helper library.
 
-&nbsp;
-
-### Changes to the last version (V2)
+### Changes to last version (V2)
 
 The library continues to evolve with refinements and new use cases. As a personal project, the Bb Rest Helper did not came with much documentation about changes and versions, however, it is also true that changes util this version have been mostly compatible with previous versions (incremental enhancements and fixes) and the history can be checked in the [Github repository](https://github.com/JgregoriBb/Bb_rest_helper)
 
@@ -41,7 +37,7 @@ request = req.Bb_GET(request_url, token, params)
 #V.2.X.X
 req = Bb_Requests()
 base_url = 'your server url'
-endpoint = 'api endpoint'
+endpoint = 'API endpoint'
 request = req.Bb_GET(base_url,endpoint,token, params)
 
 ```
@@ -50,7 +46,7 @@ request = req.Bb_GET(base_url,endpoint,token, params)
 ```python
 utils = Bb_Utils()
 quick_auth_learn = utils.quick_auth('./learn_config.json','Learn')
-quick_auth_collab= utils.quick_auth('./collab_config.json','Collaborate')
+quick_auth_collab = utils.quick_auth('./collab_config.json','Collaborate')
 
 #With this method you have access to the token and the url for each platform
 #So it will not be neccesary to hardcode the url or call Get_Config separately
@@ -62,10 +58,12 @@ learn_url = quick_auth_learn['url']
 collab_url = quick_auth_collab['url']
 ```
 
-4. **Added rate limit information to logs on Bb_requests for Learn requests** When performing a request to the learn API using Bb_requests, rate limit information covering API Limit, Remaining API calls and time to reset the API limit is included in the logs. 
-&nbsp;
+4. **Added rate limit information to logs on Bb_requests for Learn requests** When performing a request to the learn API using Bb_requests, rate limit information covering API Limit, Remaining API calls and time to reset the API limit is included in the logs. This could not be implemented for Collaborate as it does not provide the same level of information in the response headers
 
-### SETUP. Make sure you are at least in Python 3.7+
+
+### SETUP. 
+
+The library was first coded in Python 3.7. with dependencies to the request and PyJWT libraries. It has worked seamlessly with 3.8 and 3.9 and the plan is to continue supporting it and incorporating new features, fixes and enhancements.
 
 The first step is to get the right credentials for the API that you will be using. Depending on the API, the process may be a bit different. We offer a summary, but please check docs.blackboard.com for the full picture.
 
@@ -89,23 +87,18 @@ The first step is to get the right credentials for the API that you will be usin
 
 2. **Fill the configuration template (config.json).** you may want to rename to "Ally_config.json" to keep track of the changes.
 
-&nbsp;
 
 # ENVIRONMENT SETUP.
 
 Once you have the right credentials in place and your application is registered (if needed). You need to set up your environment:
 
-**OPTIONAL: Create a python3 virtual environment.** A virtual environment will provide you with a separate and clean instalation of Python just for the project you are working on, this is really helpful to avoid issues with libraries and dependencies across projects. You can create a virtual environment by installing the virtualenv python library:
+**OPTIONAL: Create a python3 virtual environment.** A virtual environment will provide you with a separate and clean instalation of Python just for the project you are working on, this is really helpful to avoid issues with libraries and dependencies across projects. You can create a virtual environment in Python 3 with venv:
 
 
-```shell
-python3 -m pip3 install --user virtualenv
-```
-
-Then you create a virtual environment by navigating to the desired folder for your application and using the command:
+Create a virtual environment by navigating to the desired folder for your application and using the command:
 
 ```shell
-python3 -m venv env
+python3 -m venv path/to/env
 ```
 
 You can activate this virtual environment by using the command:
@@ -120,37 +113,10 @@ You may need to update you pip install as the virtualenv usaully is set to defau
 pip3 install --upgrade pip
 ```
 
-Ensure that you install all the requirements:
+**Install the Bb_rest_helper package from PYPI (using PIP).** It is recomended that you always install the latest version available.
 
 ```shell
-pip3 install -r ./requirements.txt
-```
-
-You may recieve conflit errors when if you already have some dependencies installed:
-
-```shell
-
-ERROR: Cannot install -r ./requirements.txt (line 9) and cryptography==3.3.2 
-because these package versions have conflicting dependencies.
-
-The conflict is caused by:
-The user requested cryptography==3.3.2
-jwt 1.0.0 depends on cryptography<3.* and >=2.2.2
-
-```
-
-To fix this you could try to:
-
-1. loosen the range of package versions you've specified
-2. remove package versions to allow pip attempt to solve the dependency conflict
-
-```python
-# from
-cryptography=3.3.32
-
-#to
-cryptography
-
+pip3 install Bb-rest-helper  
 ```
 
 Once you are done working on your project, you can just deactivate the virtual environment by using:
@@ -158,16 +124,6 @@ Once you are done working on your project, you can just deactivate the virtual e
 ```shell
 deactivate
 ```
-
-**Install the Bb_rest_helper package from PYPI (using PIP).** To do this, simply use the PIP command or PIP3, depending on how your python  was installed.
-
-```shell
-pip3 install Bb-rest-helper
-```
-
-*Note*: For convenience, this was already added to the requirements.txt file.
-
-&nbsp;
 
 # USAGE.
 Import the classes that you need!
@@ -187,7 +143,7 @@ Create an instance of the Get_Config class to get configuration values from a JS
 ```python
 
 #create an instance of the Get_Config class.
-config=Get_Config('./collab_config.json')
+config = Get_Config('./collab_config.json')
 
 #the json file will have the following structure:
      {
@@ -197,9 +153,9 @@ config=Get_Config('./collab_config.json')
      }
 
 #Get configuration values
-url=config.get_url()
-key=config.get_key()
-secret=config.get_secret()
+url = config.get_url()
+key = config.get_key()
+secret = config.get_secret()
 
 ```
 
@@ -208,18 +164,18 @@ If using more than one API, you will need to use separate configuration files.
 ```python
 
 #Get Collab credentials
-collab_config=Get_Config('./collab_config.json')
+collab_config = Get_Config('./collab_config.json')
 
-collab_url=collab_config.get_url()
-collab_key=collab_config.get_key()
-collab_secret=collab_config.get_secret()
+collab_url = collab_config.get_url()
+collab_key = collab_config.get_key()
+collab_secret = collab_config.get_secret()
 
 #Get Learn credentials
-learn_config=Get_Config('./learn_config.json')
+learn_config = Get_Config('./learn_config.json')
 
-learn_url=learn_config.get_url()
-learn_key=learn_config.get_key()
-learn_secret=learn_config.get_secret()
+learn_url = learn_config.get_url()
+learn_key = learn_config.get_key()
+learn_secret = learn_config.get_secret()
 
 ```
 
@@ -232,7 +188,7 @@ logging by using the `set_logging()` method.
 ```python
 
 #Create an instance of the Bb_utils class
-utils=Bb_utils()
+utils = Bb_utils()
 #Set the logging, default does not require arguments
 utils.set_logging()
 
@@ -252,12 +208,12 @@ Get the authentication token by creating an instance of the auth method, and the
 ```python
 
 #Collaborate
-collab_auth=Auth_Helper(collab_url,collab_key,collab_secret)
-collab_token=collab_auth.collab_auth()
+collab_auth = Auth_Helper(collab_url,collab_key,collab_secret)
+collab_token = collab_auth.collab_auth()
 
 #Learn
-learn_auth=Auth_Helper(learn_url,learn_key,learn_secret)
-learn_token=learn_auth.learn_auth()
+learn_auth = Auth_Helper(learn_url,learn_key,learn_secret)
+learn_token = learn_auth.learn_auth()
 
 #Alternatively you can just get the Collaborate or Learn token using
 #the quick_auth one liner method included in Bb_Utils. 
@@ -265,7 +221,7 @@ learn_token=learn_auth.learn_auth()
 
 utils = Bb_Utils()
 quick_auth_learn = utils.quick_auth('./learn_config.json','Learn')
-quick_auth_collab= utils.quick_auth('./collab_config.json','Collaborate')
+quick_auth_collab = utils.quick_auth('./collab_config.json','Collaborate')
 
 #With this method you have access to the token and the url for each platform
 #So it will not be neccesary to hardcode the url or call Get_Config separately
@@ -296,7 +252,7 @@ Create variables for the base_url (your server url or collaborate CSA url) API e
 
 #Learn GET Courses endpoint and params example
 base_url = 'your server url'
-courses_endpoint='/learn/api/public/v3/courses'
+courses_endpoint = '/learn/api/public/v3/courses'
 params = {
      'limit':'10',
      'fields':'courseId,name,description,ultraStatus'
@@ -304,8 +260,8 @@ params = {
 
 #Collaborate GET Sessions endpoint and params example
 base_url = 'your collaborate CSA url'
-session_endpoint=f'{url}/sessions'
-params={
+session_endpoint = f'{url}/sessions'
+params = {
      "limit":"10"
 }
 
@@ -318,13 +274,13 @@ The next step is to create an instance of Bb_Requests, then call the Bb_GET meth
 
 ```python
 #Create an instance of the Bb_Requests class
-reqs=Bb_Requests()
+reqs = Bb_Requests()
 
 #Learn GET example
-learn_data=reqs.Bb_GET(base_url,courses_endpoint,learn_token,params)
+learn_data = reqs.Bb_GET(base_url,courses_endpoint,learn_token,params)
 
 #Collab GET example
-collab_data=reqs.Bb_GET(base_url,session_endpoint,collab_token,params)
+collab_data = reqs.Bb_GET(base_url,session_endpoint,collab_token,params)
 
 ```
 
@@ -332,7 +288,7 @@ Create an instance of the Bb_utils class, then Use the pretty_printer method to 
 ```python
 
 #Create an instance of the Bb_utils class
-utils=Bb_utils()
+utils = Bb_utils()
 
 # Use the pretty printer method to print results to the console
 helper.pretty_printer(GET_course)
@@ -346,7 +302,7 @@ right method needs to be selected from the Bb_request class (i.e. Bb_POST for a 
 ```python
 
 #example of a json payload to create courses in Learn
-payload={
+payload = {
      "externalId": "Javier_API_003",
      "courseId": "Javier_API_003",
      "name": "Learn helper test",
@@ -384,12 +340,12 @@ utils.pretty_printer(courses)
 
 ```
 
-by default, the method will indent 4 spaces and sort the keys aphabetically, this can be modified by passing `sort_keys=False` as a second argument
+by default, the method will indent 4 spaces and sort the keys aphabetically, this can be modified by passing `sort_keys = False` as a second argument
 
 
 ```python
 
-utils.pretty_printer(courses, sort_keys=False)
+utils.pretty_printer(courses, sort_keys = False)
 
 ```
 
@@ -444,36 +400,6 @@ conv_id = utils.learn_convert_external_id(
      '007687',
      'DataSourceId'
 )
-#formatted_date = utils.time_format(DD/MM/YYYY)
-
-```
-
-**learn_convert_external_id**: This method is used to get the external id of a learn course as an argument and return another field in the get response
-   (usually the course id). We found it is a common operation, particularly when getting a list of courses in a CSV.
-
-```python
-
-#Returns the courseId (default)
-converted_id = utils.learn_convert_external_id(
-     learn_url,
-     learn_token,
-     '007687'
-)
-
-```
-
-If interested in converting the externalId to another value that can be found in the get response for courses, pass that field name as the last argument for the method.
-
-```python
-
-#Returns the dataSourceId instead of the id
-converted_id = utils.learn_convert_external_id(
-     learn_url,
-     learn_token,
-     '007687',
-     'DataSourceId'
-)
-
 ```
 **quick_auth** This method has been covered in the USAGE section of this document.
 
@@ -500,7 +426,7 @@ Upload a file to be checked for accesibility, providing the token and the file p
 
 ```python
 
-upload=ally_upload_file(ally_token,'./file.docx')
+upload = ally_upload_file(ally_token,'./file.docx')
 
 ```
 Use the ally_get_hash() method to easily get the the file hash from the upload request response.
@@ -515,7 +441,7 @@ Check status of the file processing by pasing the token and file hash as argumen
 
 ```python
 
-check= ally_check_status(ally_token,file_hash)
+check = ally_check_status(ally_token,file_hash)
 
 ```
 Get the accesibility feedback for the file from the get feedback method by passing the token and content hash.
