@@ -331,14 +331,21 @@ class Bb_Requests():
                 json=self.payload)
             data = json.loads(r.text)
             r.raise_for_status()
+            logging.info(f'API limit: {r.headers["X-Rate-Limit-Limit"]}')
+            logging.info(
+                f'Remaining API calls: {r.headers["X-Rate-Limit-Remaining"]}')
+            logging.info(
+                f'Time to reset API limit: {r.headers["X-Rate-Limit-reset"]}')
             logging.info("POST Request completed")
-            #logging.info(f'API limit: {r.headers["X-Rate-Limit-Limit"]}')
-            #logging.info(f'Remaining API calls: {r.headers["X-Rate-Limit-Remaining"]}')
-            #logging.info(f'Time to reset API limit: {r.headers["X-Rate-Limit-reset"]}')
             return data
         except requests.exceptions.HTTPError as e:
             data = json.loads(r.text)
             logging.error(data["message"])
+        finally:
+            # Collaborate does not provide rate limit information, so just
+            # logging the request status and returning the data
+            logging.info("POST Request completed")
+            return data
 
     # Uploads a file to the Blacboard Learn Api uploads endpoint, getting the path to the file and the auth header
     # arguments, it returns the file id that will be used in other calls to
@@ -405,21 +412,25 @@ class Bb_Requests():
                 json=self.payload)
             data = json.loads(r.text)
             r.raise_for_status()
-            logging.info("PATCH Request completed")
             logging.info(f'API limit: {r.headers["X-Rate-Limit-Limit"]}')
             logging.info(
                 f'Remaining API calls: {r.headers["X-Rate-Limit-Remaining"]}')
             logging.info(
                 f'Time to reset API limit: {r.headers["X-Rate-Limit-reset"]}')
+            logging.info("PATCH Request completed")
             return data
         except requests.exceptions.HTTPError as e:
             data = json.loads(r.text)
             logging.error(data["message"])
+        finally:
+            # Collaborate does not provide rate limit information, so just
+            # logging the request status and returning the data
+            logging.info("PATCH Request completed")
+            return data
 
     # PUT request. It takes a PUT endpoint from the API, the authentication token,
     # a list of parameters, and a json payload as arguments. A PUT request is meant
     # to update a record entirely.
-
     def Bb_PUT(
             self,
             base_url: str,
@@ -446,16 +457,21 @@ class Bb_Requests():
                 json=self.payload)
             data = json.loads(r.text)
             r.raise_for_status()
-            logging.info("PUT Request completed")
             logging.info(f'API limit: {r.headers["X-Rate-Limit-Limit"]}')
             logging.info(
                 f'Remaining API calls: {r.headers["X-Rate-Limit-Remaining"]}')
             logging.info(
                 f'Time to reset API limit: {r.headers["X-Rate-Limit-reset"]}')
+            logging.info("PUT Request completed")
             return data
         except requests.exceptions.HTTPError as e:
             data = json.loads(r.text)
             logging.error(data["message"])
+        finally:
+            # Collaborate does not provide rate limit information, so just
+            # logging the request status and returning the data
+            logging.info("PUT Request completed")
+            return data
 
     # DELETE request. It takes a DELETE endpoint from the API, the authentication token
     # and a list of parameters as arguments.
@@ -483,12 +499,16 @@ class Bb_Requests():
             # A successful DELETE request returns a 204 code meaning that the server has
             # fulfilled the request but that there is no content to return.
             r.raise_for_status()
-            logging.info("DELETE Request completed")
             logging.info(f'API limit: {r.headers["X-Rate-Limit-Limit"]}')
             logging.info(
                 f'Remaining API calls: {r.headers["X-Rate-Limit-Remaining"]}')
             logging.info(
                 f'Time to reset API limit: {r.headers["X-Rate-Limit-reset"]}')
+            logging.info("DELETE Request completed")
+        except KeyError:
+            # Collaborate does not provide rate limit information, so just
+            # logging the request status and returning the data
+            logging.info("DELETE Request completed")
         except requests.exceptions.HTTPError as e:
             logging.error('The resource could not be deleted')
 
