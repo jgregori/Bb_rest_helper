@@ -6,7 +6,8 @@ ally_config.json
 logs
 local_tests
 credentials
-research.ipynb
+
+#VCR Yaml files for unittest
 vcr_tests
 
 # Editors

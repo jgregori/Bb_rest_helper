@@ -132,7 +132,6 @@ class Auth_Helper():
 # it is separated as it uses different authentication and has
 # a still limited set of features
 
-
 class Ally_Helper():
 
     # Initializes the auth helper by taking the target system url,
