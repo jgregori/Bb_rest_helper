@@ -16,7 +16,7 @@ The Bb Rest Helper includes 5 classes to simpilfy common API operations with Bla
 
 5. **Ally_Helper** This class is used to simplify interaction with Ally as a service, includes methods to authenticate, upload a file, check processing status and retrieve the feedback. As it is an initial release for this API with limited features, it is implemented as a separate class to provide easier access to these methods rather than having to code them manually or with the Bb_rest_helper library.
 
-## Changes in NEXT release (V3) --> Expected end of October 23
+## Changes in NEXT release (V3) --> Expected end of October 22
 
 >⚠️ **DEPRECATION NOTE FOR COLLABORATE RELATED FEATURES IN BB REST HELPER LIBRARY**
 
