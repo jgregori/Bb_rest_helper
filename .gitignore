@@ -6,6 +6,7 @@ ally_config.json
 logs
 local_tests
 credentials
+helperenv
 
 #VCR Yaml files for unittest
 vcr_tests

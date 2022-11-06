@@ -2,19 +2,21 @@ from Bb_rest_helper import Get_Config
 from Bb_rest_helper import Auth_Helper
 from Bb_rest_helper import Bb_Requests
 from Bb_rest_helper import Bb_Utils
-from Bb_rest_helper import Ally_Helper
 
 import unittest
 import vcr
-import os
+import os,os.path
 import glob
 import shutil
 import time
+import datetime
+import logging
 
 
 class Tests_Bb_rest_helper(unittest.TestCase):
 
     # runs before each test, sets up logging and authentication
+    #@vcr.use_cassette('./Bb_rest_helper/vcr_tests/test_setup')
     def setUp(self):
         self.utils = Bb_Utils()
         self.utils.set_logging()
@@ -27,7 +29,7 @@ class Tests_Bb_rest_helper(unittest.TestCase):
     @classmethod
     def tearDownClass(Tests_Bb_rest_helper):
         shutil.rmtree('./logs')
-
+    
     # Tests for Get_Config() class
     def test_get_url(self):
         config = Get_Config('./Bb_rest_helper/credentials/config.json')
@@ -48,8 +50,34 @@ class Tests_Bb_rest_helper(unittest.TestCase):
         config = Get_Config('./Bb_rest_helper/credentials/ally_config.json')
         client_id = config.get_client_id()
         assert client_id
-
+    
     # Tests for Auth_Helper() class
+    def test_token_is_expired_true(self):
+        self.config = Get_Config('./Bb_rest_helper/credentials/config.json')
+        self.url = self.config.get_url()
+        self.key = self.config.get_key()
+        self.secret = self.config.get_secret()
+        self.auth = Auth_Helper(self.learn_url, self.key, self.secret)
+        #set expiration within one second to test FALSE
+        self.now = datetime.datetime.now()
+        self.expires_at = self.now + \
+            datetime.timedelta(seconds=1)
+        self.exp = self.auth.token_is_expired(self.expires_at)
+        assert self.exp
+    
+    def test_token_is_expired_false(self):
+        self.config = Get_Config('./Bb_rest_helper/credentials/config.json')
+        self.url = self.config.get_url()
+        self.key = self.config.get_key()
+        self.secret = self.config.get_secret()
+        self.auth = Auth_Helper(self.learn_url, self.key, self.secret)
+        #set expiration within one second to test FALSE
+        self.now = datetime.datetime.now()
+        self.expires_at = self.now + \
+            datetime.timedelta(seconds=5)
+        self.exp = self.auth.token_is_expired(self.expires_at)
+        self.assertFalse(self.exp)
+
     @vcr.use_cassette('./Bb_rest_helper/vcr_tests/test_learn_auth')
     def test_learn_auth(self):
         self.config = Get_Config('./Bb_rest_helper/credentials/config.json')
@@ -119,12 +147,12 @@ class Tests_Bb_rest_helper(unittest.TestCase):
         self.file_path = './Bb_rest_helper/vcr_tests/test.docx'
         self.upload = self.reqs.Bb_POST_file(
             self.learn_url, self.learn_token, self.file_path)
-        assert self.upload[0]
+        assert self.upload[0], 'Bb_Post_file was expected to return an id for the uploaded file'
 
     @vcr.use_cassette('./Bb_rest_helper/vcr_tests/test_Bb_PATCH')
     def test_Bb_PATCH(self):
         # Get the id for the assment to patch from the response
-        self.announcement_id = '_1420_1'
+        self.announcement_id = '_1437_1'
         self.reqs = Bb_Requests()
         self.endpoint = f'/learn/api/public/v1/announcements/{self.announcement_id}'
         self.params = {
@@ -149,13 +177,18 @@ class Tests_Bb_rest_helper(unittest.TestCase):
     def test_Bb_PUT(self):
         self.node_id = '_87_1'  # node from emeasedemo
         self.user_id = '_13016_1'  # user id from emeasedemo
+        self.payload = {
+            "nodeRoles": ["admin"]
+            }
         self.reqs = Bb_Requests()
         self.endpoint = f'/learn/public/api/v1/institutionalHierarchy/nodes/{self.node_id}/admins/{self.user_id}'
+        self.data = self.reqs.Bb_PUT(self.learn_url, self.endpoint, self.learn_token, self.payload)
+        
 
     @vcr.use_cassette('./Bb_rest_helper/vcr_tests/test_Bb_DELETE')
     def test_Bb_DELETE(self):
         # Announcement id from emeasedemo, update if cassete changes.
-        self.announcement_id = '_1420_1'
+        self.announcement_id = '_1437_1'
         self.reqs = Bb_Requests()
         self.endpoint = f'/learn/api/public/v1/announcements/{self.announcement_id}'
         self.data = self.reqs.Bb_DELETE(
@@ -172,7 +205,7 @@ class Tests_Bb_rest_helper(unittest.TestCase):
     @unittest.skip('Just a printer method')
     def test_pretty_printer(self):
         data = {'name': 'javier', 'surname': 'gregori', 'cat': 1}
-        utils.pretty_printer(data)
+        self.utils.pretty_printer(data)
 
     @unittest.skip('Skip for now, method needs updating, issue #79')
     @vcr.use_cassette('./Bb_rest_helper/vcr_tests/test_check_course_id_true')
@@ -188,7 +221,7 @@ class Tests_Bb_rest_helper(unittest.TestCase):
         # Fake External course id to trigger False
         check = self.utils.check_course_id(
             self.learn_url, self.learn_token, '111111')
-        assertFalse(check)
+        self.assertFalse(check)
 
     def test_time_format_1(self, utils=Bb_Utils()):
         data = '02/02/2021'
