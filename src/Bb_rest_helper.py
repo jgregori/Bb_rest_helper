@@ -1,9 +1,11 @@
 import json
 import logging
+from logging.handlers import TimedRotatingFileHandler
 import os
 import sys
 import time
-from datetime import datetime
+
+import datetime
 
 import jwt
 import requests
@@ -73,29 +75,73 @@ class Auth_Helper():
         self.url = url
         self.key = key
         self.secret = secret
+        self.learn_token = None
+    
+    # Method that returns True when the token expires. Used by the learn_auth() method.
+    def token_is_expired(self, expiration_datetime):
+        self.expiration_datetime = expiration_datetime
+        self.time_left = (self.expiration_datetime -
+                          datetime.datetime.now()).total_seconds()
+        if self.time_left < 1:
+            time.sleep(1)
+            return True
+        else:
+            return False
 
     # Returns the authentication token for Blackboard Learn.
     def learn_auth(self):
+        self.endpoint = "/learn/api/public/v1/oauth2/token"
+        self.params = {"grant_type": "client_credentials"}
+        self.headers = {
+            'Content-Type': "application/x-www-form-urlencoded"}
+
         try:
-            self.url_token = "/learn/api/public/v1/oauth2/token"
-            self.params = {"grant_type": "client_credentials"}
-            self.headers = {
-                'Content-Type': "application/x-www-form-urlencoded"}
-            r = requests.request(
-                "POST",
-                self.url +
-                self.url_token,
-                headers=self.headers,
-                params=self.params,
-                auth=(
-                    self.key,
-                    self.secret))
-            r.raise_for_status()
-            data = json.loads(r.text)
-            self.learn_token = data["access_token"]
-            logger.info("Learn Authentication successful")
-            logger.info("Token expires in: " + str(data["expires_in"]))
-            return self.learn_token
+            if self.learn_token == None:
+
+                r = requests.request(
+                    "POST",
+                    self.url +
+                    self.endpoint,
+                    headers=self.headers,
+                    params=self.params,
+                    auth=(
+                        self.key,
+                        self.secret))
+                r.raise_for_status()
+                self.data = json.loads(r.text)
+                self.learn_token = self.data["access_token"]
+                self.expires = self.data["expires_in"]
+                m, s = divmod(self.expires, 60)
+                self.now = datetime.datetime.now()
+                self.expires_at = self.now + \
+                    datetime.timedelta(seconds=s, minutes=m)
+                logger.info("Learn Authentication successful")
+                logger.info("Token expires at: " + str(self.expires_at))
+                return self.learn_token
+                
+            elif self.token_is_expired(self.expires_at):
+                logger.info('refresh token')
+                r = requests.request(
+                    "POST",
+                    self.url +
+                    self.endpoint,
+                    headers=self.headers,
+                    params=self.params,
+                    auth=(
+                        self.conf.get_key(),
+                        self.conf.get_secret()))
+                r.raise_for_status()
+                self.data = json.loads(r.text)
+                self.learn_token = self.data["access_token"]
+                self.expires = self.data["expires_in"]
+                m, s = divmod(self.expires, 60)
+                self.now = datetime.datetime.now()
+                self.expires_at = self.now + \
+                    datetime.timedelta(seconds=s, minutes=m)
+                logger.info("Learn Authentication successful")
+                logger.info("Token expires at: " + str(self.expires_at))
+                return self.learn_token
+
         except requests.exceptions.HTTPError as e:
             data = json.loads(r.text)
             logger.error(data["error_description"])
@@ -624,29 +670,29 @@ class Bb_Utils():
     # can be provided. The outcome of the method is YYYY-MM-DDTHH:MM:SS:000Z
     def time_format(
             self,
-            date: str,
+            dt: str,
             date_delimiter: str = "/",
             hour_delimiter: str = ":"):
-        self.date = date
+        self.dt = dt
         self.date_delimiter = date_delimiter
         self.hour_delimiter = hour_delimiter
-        if len(date) < 11:
-            split_date = date.split(self.date_delimiter)
-            date_formatted = datetime(int(split_date[2]), int(split_date[1]), int(
+        if len(self.dt) < 11:
+            split_date = dt.split(self.date_delimiter)
+            date_formatted = datetime.datetime(int(split_date[2]), int(split_date[1]), int(
                 split_date[0])).strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3] + 'Z'
             return date_formatted
-        elif len(date) > 11 and len(date) < 17:
-            split_date = date.split(self.date_delimiter)
+        elif len(self.dt) > 11 and len(self.dt) < 17:
+            split_date = self.dt.split(self.date_delimiter)
             split_year = split_date[2].split()
             split_hour = split_year[1].split(self.hour_delimiter)
-            date_formatted = datetime(int(split_year[0]), int(split_date[1]), int(split_date[0]), int(
+            date_formatted = datetime.datetime(int(split_year[0]), int(split_date[1]), int(split_date[0]), int(
                 split_hour[0]), int(split_hour[1])).strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3] + 'Z'
             return date_formatted
         else:
-            split_date = date.split(self.date_delimiter)
+            split_date = self.dt.split(self.date_delimiter)
             split_year = split_date[2].split()
             split_hour = split_year[1].split(self.hour_delimiter)
-            date_formatted = datetime(int(split_year[0]), int(split_date[1]), int(split_date[0]), int(
+            date_formatted = datetime.datetime(int(split_year[0]), int(split_date[1]), int(split_date[0]), int(
                 split_hour[0]), int(split_hour[1]), int(split_hour[2])).strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3] + 'Z'
             return date_formatted
 
@@ -692,7 +738,6 @@ class Bb_Utils():
 # A convenience method that further abstracts the setup and authentication process to return the token and the url in
 # just one line. This method is just for Learn and collaborate. The url has been added to avoid having to hardcode
 # this value or having to call Get_Config separately.
-
 
     def quick_auth(self, filepath: str, platform: str):
         self.filepath = filepath
