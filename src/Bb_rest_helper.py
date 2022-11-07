@@ -146,42 +146,7 @@ class Auth_Helper():
             data = json.loads(r.text)
             logger.error(data["error_description"])
 
-    # Returns the authentication token for Blackboard Collaborate.
-    def collab_auth(self):
-        self.token_url = '/token'
-        self.exp = int(round(time.time() * 1000)) + 270000
-        self.claims = {"iss": self.key, "sub": self.key, "exp": self.exp}
-        # Encode the JWT assertion with the jWT module, that includes claims
-        # and the secret.
-        self.assertion = jwt.encode(self.claims, self.secret)
-        self.credentials = 'urn:ietf:params:oauth:grant-type:jwt-bearer'
-        self.headers = {  # Content type is sent as a header
-            'Content-Type': 'application/x-www-form-urlencoded'
-        }
-        # Grant credentials and assertion are sent as parameters
-        self.params = {
-            'grant_type': self.credentials,
-            'assertion': self.assertion
-        }
-        try:
-            r = requests.request(
-                'POST',
-                self.url +
-                self.token_url,
-                params=self.params,
-                headers=self.headers,
-                auth=(
-                    self.key,
-                    self.secret))
-            r.raise_for_status()
-            data = json.loads(r.text)
-            logger.info('Collaborate Authentication successful')
-            logger.info("Token expires in: " + str(data["expires_in"]))
-            self.collab_token = data['access_token']
-            return self.collab_token
-        except requests.exceptions.HTTPError as e:
-            data = json.loads(r.text)
-            logger.error(data["error"])
+
 
 # A separate class to support Ally as a service requests.
 # it is separated as it uses different authentication and has
@@ -309,7 +274,9 @@ class Bb_Requests():
 
     # GET request. It takes a GET endpoint from the API, the authentication
     # token and a list of parameters as arguments. This request has been updated
-    # to support pagination
+    # to support pagination. Note this is currently a heavy method, use parameters
+    # limit responses if needed.
+
     def Bb_GET(
             self,
             base_url: str,
@@ -359,9 +326,7 @@ class Bb_Requests():
             logger.info(
                 f'Time to reset API limit: {r.headers["X-Rate-Limit-reset"]}')
             return data_from_pages
-        finally:
-            # returns data from Collabrate API, as there is no pagination
-            return data_from_pages
+
 
     # POST request. It takes a POST endpoint from the API, the authentication token,
     # a list of parameters, and a json payload as arguments.
@@ -402,11 +367,7 @@ class Bb_Requests():
         except requests.exceptions.HTTPError as e:
             data = json.loads(r.text)
             logger.error(data["message"])
-        finally:
-            # Collaborate does not provide rate limit information, so just
-            # logging the request status and returning the data
-            logger.info("POST Request completed")
-            return data
+
 
     # Uploads a file to the Blacboard Learn Api uploads endpoint, getting the path to the file and the auth header
     # arguments, it returns the file id that will be used in other calls to
@@ -483,11 +444,6 @@ class Bb_Requests():
         except requests.exceptions.HTTPError as e:
             data = json.loads(r.text)
             logger.error(data["message"])
-        finally:
-            # Collaborate does not provide rate limit information, so just
-            # logging the request status and returning the data
-            logger.info("PATCH Request completed")
-            return data
 
     # PUT request. It takes a PUT endpoint from the API, the authentication token,
     # a list of parameters, and a json payload as arguments. A PUT request is meant
@@ -528,11 +484,6 @@ class Bb_Requests():
         except requests.exceptions.HTTPError as e:
             data = json.loads(r.text)
             logger.error(data["message"])
-        finally:
-            # Collaborate does not provide rate limit information, so just
-            # logging the request status and returning the data
-            logger.info("PUT Request completed")
-            return data
 
     # DELETE request. It takes a DELETE endpoint from the API, the authentication token
     # and a list of parameters as arguments.
@@ -739,7 +690,7 @@ class Bb_Utils():
 # just one line. This method is just for Learn and collaborate. The url has been added to avoid having to hardcode
 # this value or having to call Get_Config separately.
 
-    def quick_auth(self, filepath: str, platform: str):
+    def quick_auth(self, filepath: str, platform: str='Learn'):
         self.filepath = filepath
         self.platform = platform
         self.conf = Get_Config(self.filepath)
@@ -754,13 +705,6 @@ class Bb_Utils():
                 'url': self.url
             }
             return data
-        elif self.platform == "Collaborate":
-            self.token = self.auth.collab_auth()
-            data = {
-                'token': self.token,
-                'url': self.url
-            }
-            return data
         else:
             logger.error(
-                'Please specify a platform, valid values are Learn and Collaborate.')
+                'Collaborate methods have been removed from V3. "platform" argument ketp for compatibility with default value of "Learn"')
