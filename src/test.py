@@ -238,7 +238,12 @@ class Tests_Bb_rest_helper(unittest.TestCase):
         self.learn_url = self.quick_auth['url']
         self.learn_token = self.quick_auth['token']
         assert self.learn_url, self.learn_token
-
+    
+    #Assuming connectivity is present when running this test, otherwise needs to assertFalse
+    def test_check_connection_true(self):
+        self.utils = Bb_Utils()
+        self.check = self.utils.check_connection()
+        self.assertTrue(self.check)
 
 if __name__ == '__main__':
     unittest.main()
