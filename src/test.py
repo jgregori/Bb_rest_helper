@@ -1,22 +1,21 @@
-from Bb_rest_helper import Get_Config
-from Bb_rest_helper import Auth_Helper
-from Bb_rest_helper import Bb_Requests
-from Bb_rest_helper import Bb_Utils
-
-import unittest
-import vcr
-import os,os.path
+import datetime
 import glob
+import logging
+import os
+import os.path
 import shutil
 import time
-import datetime
-import logging
+import unittest
+
+import vcr
+
+from Bb_rest_helper import Auth_Helper, Bb_Requests, Bb_Utils, Get_Config
 
 
 class Tests_Bb_rest_helper(unittest.TestCase):
 
     # runs before each test, sets up logging and authentication
-    #@vcr.use_cassette('./Bb_rest_helper/vcr_tests/test_setup')
+    # @vcr.use_cassette('./Bb_rest_helper/vcr_tests/test_setup')
     def setUp(self):
         self.utils = Bb_Utils()
         self.utils.set_logging()
@@ -24,12 +23,12 @@ class Tests_Bb_rest_helper(unittest.TestCase):
             './Bb_rest_helper/credentials/config.json', 'Learn')
         self.learn_url = self.quick_auth['url']
         self.learn_token = self.quick_auth['token']
-    
+
     # Runs after tests in the class, removes logs and log folder
     @classmethod
     def tearDownClass(Tests_Bb_rest_helper):
         shutil.rmtree('./logs')
-    
+
     # Tests for Get_Config() class
     def test_get_url(self):
         config = Get_Config('./Bb_rest_helper/credentials/config.json')
@@ -50,7 +49,7 @@ class Tests_Bb_rest_helper(unittest.TestCase):
         config = Get_Config('./Bb_rest_helper/credentials/ally_config.json')
         client_id = config.get_client_id()
         assert client_id
-    
+
     # Tests for Auth_Helper() class
     def test_token_is_expired_true(self):
         self.config = Get_Config('./Bb_rest_helper/credentials/config.json')
@@ -58,20 +57,20 @@ class Tests_Bb_rest_helper(unittest.TestCase):
         self.key = self.config.get_key()
         self.secret = self.config.get_secret()
         self.auth = Auth_Helper(self.learn_url, self.key, self.secret)
-        #set expiration within one second to test FALSE
+        # set expiration within one second to test FALSE
         self.now = datetime.datetime.now()
         self.expires_at = self.now + \
             datetime.timedelta(seconds=1)
         self.exp = self.auth.token_is_expired(self.expires_at)
         assert self.exp
-    
+
     def test_token_is_expired_false(self):
         self.config = Get_Config('./Bb_rest_helper/credentials/config.json')
         self.url = self.config.get_url()
         self.key = self.config.get_key()
         self.secret = self.config.get_secret()
         self.auth = Auth_Helper(self.learn_url, self.key, self.secret)
-        #set expiration within one second to test FALSE
+        # set expiration within one second to test FALSE
         self.now = datetime.datetime.now()
         self.expires_at = self.now + \
             datetime.timedelta(seconds=5)
@@ -87,11 +86,6 @@ class Tests_Bb_rest_helper(unittest.TestCase):
         self.auth = Auth_Helper(self.learn_url, self.key, self.secret)
         self.test_token = self.auth.learn_auth()
         assert self.test_token
-
-    # Tests for Ally_Helper class
-    # A decision will be made to separate this functionality into a separate library
-    # The scope of the Bb_rest_helper is to provide general methods, not individual
-    # examples of usage.
 
     # Tests for Bb_Requests() class
 
@@ -160,7 +154,7 @@ class Tests_Bb_rest_helper(unittest.TestCase):
         self.data = self.reqs.Bb_PATCH(
             self.learn_url, self.endpoint, self.learn_token, self.payload, self.params)
         assert self.data['id'], self.data['title'] in self.data
-    
+
     @unittest.skip('Known issue, skipping until resolved in issue #87')
     @vcr.use_cassette('./Bb_rest_helper/vcr_tests/test_Bb_PUT')
     def test_Bb_PUT(self):
@@ -168,11 +162,11 @@ class Tests_Bb_rest_helper(unittest.TestCase):
         self.user_id = '_13016_1'  # user id from emeasedemo
         self.payload = {
             "nodeRoles": ["admin"]
-            }
+        }
         self.reqs = Bb_Requests()
         self.endpoint = f'/learn/public/api/v1/institutionalHierarchy/nodes/{self.node_id}/admins/{self.user_id}'
-        self.data = self.reqs.Bb_PUT(self.learn_url, self.endpoint, self.learn_token, self.payload)
-        
+        self.data = self.reqs.Bb_PUT(
+            self.learn_url, self.endpoint, self.learn_token, self.payload)
 
     @vcr.use_cassette('./Bb_rest_helper/vcr_tests/test_Bb_DELETE')
     def test_Bb_DELETE(self):
