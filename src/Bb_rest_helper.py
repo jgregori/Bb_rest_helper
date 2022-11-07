@@ -568,9 +568,9 @@ class Bb_Utils():
             logger.error(data["message"])
 
 
-# A convenience method that further abstracts the setup and authentication process to return the token and the url in
-# just one line. This method is just for Learn and collaborate. The url has been added to avoid having to hardcode
-# this value or having to call Get_Config separately.
+    # A convenience method that further abstracts the setup and authentication process to return the token and the url in
+    # just one line. This method is just for Learn and collaborate. The url has been added to avoid having to hardcode
+    # this value or having to call Get_Config separately.
 
     def quick_auth(self, filepath: str, platform: str = 'Learn'):
         self.filepath = filepath
@@ -590,3 +590,15 @@ class Bb_Utils():
         else:
             logger.error(
                 'Collaborate methods have been removed from V3. "platform" argument ketp for compatibility with default value of "Learn"')
+
+    # A simple method that detects wheter there is conectivtiy, returns True if connected and
+    # false if not. This methods uses requests to test connection to a site (google by default )
+    def check_connection(self, host="https://www.google.com/",timeout=int(5) ):
+        self.host = host
+        self.timeout = timeout
+        try:
+            req = requests.get(self.host,timeout = self.timeout)
+            return True
+        except (requests.ConnectionError,requests.Timeout) as e:
+            logger.warning("No connection")
+            return False
