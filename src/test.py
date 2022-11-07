@@ -88,18 +88,6 @@ class Tests_Bb_rest_helper(unittest.TestCase):
         self.test_token = self.auth.learn_auth()
         assert self.test_token
 
-    @unittest.skip('Deprecated method --Skipping until deleted')
-    @vcr.use_cassette('./Bb_rest_helper/vcr_tests/test_collab_auth')
-    def test_collab_auth(self):
-        self.config = Get_Config(
-            './Bb_rest_helper/credentials/collab_config.json')
-        self.url = self.config.get_url()
-        self.key = self.config.get_key()
-        self.secret = self.config.get_secret()
-        self.auth = Auth_Helper(self.learn_url, self.key, self.secret)
-        self.test_token = self.auth.collab_auth()
-        assert self.test_token
-
     # Tests for Ally_Helper class
     # A decision will be made to separate this functionality into a separate library
     # The scope of the Bb_rest_helper is to provide general methods, not individual
@@ -172,7 +160,8 @@ class Tests_Bb_rest_helper(unittest.TestCase):
         self.data = self.reqs.Bb_PATCH(
             self.learn_url, self.endpoint, self.learn_token, self.payload, self.params)
         assert self.data['id'], self.data['title'] in self.data
-
+    
+    @unittest.skip('Known issue, skipping until resolved in issue #87')
     @vcr.use_cassette('./Bb_rest_helper/vcr_tests/test_Bb_PUT')
     def test_Bb_PUT(self):
         self.node_id = '_87_1'  # node from emeasedemo
