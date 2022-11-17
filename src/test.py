@@ -6,6 +6,7 @@ import os.path
 import shutil
 import time
 import unittest
+import csv
 
 import vcr
 
@@ -25,9 +26,13 @@ class Tests_Bb_rest_helper(unittest.TestCase):
         self.learn_token = self.quick_auth['token']
 
     # Runs after tests in the class, removes logs and log folder
+    # also removes csv files for writing tests
     @classmethod
     def tearDownClass(Tests_Bb_rest_helper):
         shutil.rmtree('./logs')
+        path = './Bb_rest_helper/vcr_tests/test_write.csv'
+        if os.path.isfile(path):
+            os.remove(path)
 
     # Tests for Get_Config() class
     def test_get_url(self):
@@ -244,6 +249,41 @@ class Tests_Bb_rest_helper(unittest.TestCase):
         self.utils = Bb_Utils()
         self.check = self.utils.check_connection()
         self.assertTrue(self.check)
+
+    def test_csv_reader(self):
+
+        self.path = './Bb_rest_helper/vcr_tests/test_read.csv'
+        self.utils = Bb_Utils()
+        self.reader = self.utils.read_csv(self.path)
+        assert self.reader[0] in self.reader
+
+    def test_csv_writer_file(self):
+        self.path = './Bb_rest_helper/vcr_tests/test_write.csv'
+        self.headers = ['header1','header2','header3']
+        self.data = {'header1':'data1','header2':'data2','header3':'data3'}
+        self.data2 = {'header1':'data1-2','header2':'data2-2','header3':'data3-2'}
+        self.utils = Bb_Utils()
+        self.utils.write_csv(self.path, self.headers, self.data)
+        self.utils.write_csv(self.path, self.headers, self.data2)
+
+        assert os.path.isfile(self.path)
+    
+    def test_csv_writer_content(self):
+        self.path = './Bb_rest_helper/vcr_tests/test_write.csv'
+        self.headers = ['header1','header2','header3']
+        self.data = {'header1':'data1','header2':'data2','header3':'data3'}
+        self.data2 = {'header1':'data1-2','header2':'data2-2','header3':'data3-2'}
+        self.utils = Bb_Utils()
+        self.utils.write_csv(self.path, self.headers, self.data)
+        self.utils.write_csv(self.path, self.headers, self.data2)
+        self.read_data = []
+        with open(self.path,'r',newline='') as csvfile:
+            self.reader = csv.DictReader(csvfile)
+            for self.row in self.reader:
+                self.data_to_append = self.row
+                self.read_data.append(self.data_to_append)
+        assert self.data,self.data2 in self.read_data  
+
 
 if __name__ == '__main__':
     unittest.main()
