@@ -5,6 +5,7 @@ import os
 import sys
 import time
 from logging.handlers import TimedRotatingFileHandler
+import csv
 
 import requests
 from requests import HTTPError
@@ -602,3 +603,35 @@ class Bb_Utils():
         except (requests.ConnectionError,requests.Timeout) as e:
             logger.warning("No connection")
             return False
+    
+    #This method reads data from a csv file, it takes the path from the file, and optionally a delimiter
+    #(default ',') 
+    def read_csv(self, path, delimiter = ','):
+        self.delimiter = delimiter
+        self.path = path
+        self.data = []
+        try:
+            with open(self.path,'r',newline='') as csvfile:
+                self.reader = csv.DictReader(csvfile,delimiter=self.delimiter)
+                for self.row in self.reader:
+                    self.data_to_append = self.row
+                    self.data.append(self.data_to_append)
+                return self.data
+        except FileNotFoundError:
+            logger.error("File not found")
+    
+    def write_csv(self,path, headers, data, delimiter=','):
+        self.path = path
+        self.headers= headers
+        self.data= data
+        self.delimiter = delimiter
+        if os.path.isfile(self.path):
+            with open(self.path,'a',newline = '')as csvfile:
+                self.writer = csv.DictWriter(csvfile,fieldnames=self.headers, delimiter=self.delimiter)
+                self.writer.writerow(data)  
+        else:
+            with open(self.path,'a',newline = '')as csvfile:
+                self.writer = csv.DictWriter(csvfile,fieldnames=self.headers, delimiter=self.delimiter)
+                self.writer.writeheader()
+                self.writer.writerow(data)
+        
