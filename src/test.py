@@ -195,7 +195,6 @@ class Tests_Bb_rest_helper(unittest.TestCase):
         data = {'name': 'javier', 'surname': 'gregori', 'cat': 1}
         self.utils.pretty_printer(data)
 
-    @unittest.skip('Skip for now, method needs updating, issue #79')
     @vcr.use_cassette('./Bb_rest_helper/vcr_tests/test_check_course_id_true')
     def test_check_course_id_true(self):
         # External course id from Emeasedemo
@@ -203,12 +202,11 @@ class Tests_Bb_rest_helper(unittest.TestCase):
             self.learn_url, self.learn_token, 'AWPBL')
         assert check
 
-    @unittest.skip('Skip for now, method needs updating, issue #79')
     @vcr.use_cassette('./Bb_rest_helper/vcr_tests/test_check_course_id_false')
     def test_check_course_id_false(self):
         # Fake External course id to trigger False
         check = self.utils.check_course_id(
-            self.learn_url, self.learn_token, '111111')
+            self.learn_url, self.learn_token, 'fake_Course')
         self.assertFalse(check)
 
     def test_time_format_1(self, utils=Bb_Utils()):

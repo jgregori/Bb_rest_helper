@@ -462,37 +462,26 @@ class Bb_Utils():
         else:
             logger.warning("No data to print.")
 
-    # Checks if a given Learn course exists in the server
-    def check_course_id(self, token: str, external_course_id: str):
+    # Checks if a given Learn course exists in the server. Takes the external course id as an argument
+    def check_course_id(self,url:str, token: str, external_course_id: str):
+        self.url = url
         self.token = token
         self.external_course_id = external_course_id
-        try:
-            endpoint_courses = "/learn/api/public/v3/courses"
-            headers = {
-                'Authorization': f'Bearer {self.token}',
-                'Content-Type': "Application/json"
-            }
-            params = {
-                "externalId": self.external_course_id,
-                "fields": "id"
-            }
-            r = requests.request(
-                'GET',
-                f'{self.url}{endpoint_courses}',
-                headers=headers,
-                params=params)
-            r.raise_for_status()
-            data = json.loads(r.text)
-            if data["results"]:
-                logger.info('The course has been found in the server.')
-                return True
-            else:
-                logger.warning(
-                    'The course could not be found, please check that the provided course id is the external id')
-                return False
-        except requests.exceptions.HTTPError as e:
-            data = json.loads(r.text)
-            logger.error(data["message"])
+        self.reqs = Bb_Requests()
+        self.endpoint_courses = "/learn/api/public/v3/courses"
+        self.params = {
+            "externalId": self.external_course_id,
+            "fields": "id"
+        }
+        data = self.reqs.Bb_GET(self.url, self.endpoint_courses, self.token, self.params)
+        print(data)
+        if data:
+            logger.info('The course has been found in the server.')
+            return True
+        else:
+            logger.warning('The course could not be found, please check that the provided course id is the external id')
+            return False
+
 
     # This method is provided to facilitate date formatting when importing dates from
     # other applications, i.e, dates in excel format, it can take a date string with
