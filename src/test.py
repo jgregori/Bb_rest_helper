@@ -232,7 +232,7 @@ class Tests_Bb_rest_helper(unittest.TestCase):
         self.course_external_id = 'AWPBL'  # course external id from emeasedemo
         data = self.utils.learn_convert_external_id(
             self.learn_url, self.learn_token, self.course_external_id)
-        assert data
+        assert '_553_1' in data
 
     @vcr.use_cassette('./Bb_rest_helper/vcr_tests/test_quick_auth')
     def test_quick_auth(self):
@@ -249,7 +249,6 @@ class Tests_Bb_rest_helper(unittest.TestCase):
         self.assertTrue(self.check)
 
     def test_csv_reader(self):
-
         self.path = './Bb_rest_helper/vcr_tests/test_read.csv'
         self.utils = Bb_Utils()
         self.reader = self.utils.read_csv(self.path)

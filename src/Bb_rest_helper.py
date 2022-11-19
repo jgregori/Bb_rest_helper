@@ -533,29 +533,19 @@ class Bb_Utils():
         self.token = token
         self.external_id = external_id
         self.final_id = final_id
-        self.url_courses = f'{self.url}/learn/api/public/v3/courses'
-        headers = {
-            'Authorization': f'Bearer {self.token}',
-            'Content-Type': "Application/json"
-        }
-        params = {
+        self.reqs = Bb_Requests()
+        self.endpoint_courses = '/learn/api/public/v3/courses'
+        self.params = {
             "externalId": self.external_id,
             "fields": self.final_id
         }
-        try:
-            r = requests.request(
-                'GET', self.url_courses, headers=headers, params=params)
-            r.raise_for_status()
-            data = json.loads(r.text)
-            if len(data) == 1:
-                logger.info("Course externalId converted to course Id")
-                return data["results"][0][self.final_id]
-            else:
-                logger.warning(
-                    "Several results have been found, please use a more specific Id")
-        except requests.exceptions.HTTPError as e:
-            data = json.loads(r.text)
-            logger.error(data["message"])
+        self.data = self.reqs.Bb_GET(self.url,self.endpoint_courses,self.token, self.params)
+        if len(self.data) == 1:
+            logger.info("Course externalId converted to course Id")
+            return self.data[0][self.final_id]
+        else:
+            logger.warning( "Several results have been found, please use a more specific Id")
+
 
 
     # A convenience method that further abstracts the setup and authentication process to return the token and the url in
