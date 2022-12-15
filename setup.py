@@ -5,10 +5,10 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="Bb_rest_helper", 
-    version="2.0.1",
+    version="3.0.0",
     author="Javier Gregori",
-    author_email="javier.gregori@blackboard.com",
-    description="A Python 3 library to simplify working with Blackboard APIs.",
+    author_email="javier.gregori@anthology.com",
+    description="A library to simplify requests to the Blackboard REST APIs for Anthology Blackboard products, alongside a bunch of convenience methods.",
     long_description=long_description,
     long_description_content_type="text/markdown",
     py_modules=["Bb_rest_helper"],
@@ -21,7 +21,6 @@ setuptools.setup(
     ],
     python_requires='>=3.7',
     install_requires=[
-        "PyJWT>= 2.3.0",
         "requests>=2.24.0",
     ],
 )
