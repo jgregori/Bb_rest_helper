@@ -1,3 +1,8 @@
+#Initial suite of tests for the Bb_Rest_Helper library, these tests
+#use the VCR library to ensure a stable test environment by recording the
+#API responses, if you want to replicate these tests, make sure to include data
+#from your test system.
+
 import datetime
 import glob
 import logging
@@ -160,18 +165,20 @@ class Tests_Bb_rest_helper(unittest.TestCase):
             self.learn_url, self.endpoint, self.learn_token, self.payload, self.params)
         assert self.data['id'], self.data['title'] in self.data
 
-    @unittest.skip('Known issue, skipping until resolved in issue #87')
     @vcr.use_cassette('./Bb_rest_helper/vcr_tests/test_Bb_PUT')
     def test_Bb_PUT(self):
-        self.node_id = '_87_1'  # node from emeasedemo
-        self.user_id = '_13016_1'  # user id from emeasedemo
-        self.payload = {
-            "nodeRoles": ["admin"]
-        }
         self.reqs = Bb_Requests()
-        self.endpoint = f'/learn/public/api/v1/institutionalHierarchy/nodes/{self.node_id}/admins/{self.user_id}'
-        self.data = self.reqs.Bb_PUT(
-            self.learn_url, self.endpoint, self.learn_token, self.payload)
+        self.course_id = '_152_1'
+        self.user_id = '_1539_1'
+        self.payload = {
+            "availability": {
+                "available": "Yes"
+                },
+            "courseRoleId": "Instructor"
+        }
+        self.endpoint = f'/learn/api/public/v1/courses/{self.course_id}/users/{self.user_id}'
+        self.data = self.reqs.Bb_PUT(self.learn_url,self.endpoint,self.learn_token,self.payload)
+        assert("Instructor" in self.data['courseRoleId'])
 
     @vcr.use_cassette('./Bb_rest_helper/vcr_tests/test_Bb_DELETE')
     def test_Bb_DELETE(self):

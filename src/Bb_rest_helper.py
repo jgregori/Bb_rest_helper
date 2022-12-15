@@ -367,7 +367,9 @@ class Bb_Requests():
         except requests.exceptions.HTTPError as e:
             data = json.loads(r.text)
             logger.error(data["message"])
-
+        except json.decoder.JSONDecodeError as e:
+            pass
+                
     # DELETE request. It takes a DELETE endpoint from the API, the authentication token
     # and a list of parameters as arguments.
     def Bb_DELETE(
